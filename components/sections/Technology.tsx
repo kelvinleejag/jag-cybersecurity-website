@@ -3,7 +3,7 @@ import { standards } from '@/lib/content';
 
 export function Technology() {
   return (
-    <section id="technology" className="bg-bg-base py-section">
+    <section id="technology" className="py-section">
       <div className="mx-auto max-w-container px-gutter">
         <FadeInOnScroll>
           <p className="font-mono text-eyebrow uppercase tracking-eyebrow text-brand-cyan">

@@ -87,10 +87,10 @@ export default function Navigation() {
             <Image
               src="/assets/jag-logo.png"
               alt="JAG Cybersecurity"
-              width={44}
-              height={48}
+              width={64}
+              height={70}
               priority
-              className="h-10 w-auto"
+              className="h-14 w-auto"
             />
           </Link>
           <ul className="hidden md:flex items-center gap-8">
@@ -137,9 +137,9 @@ export default function Navigation() {
           <Image
             src="/assets/jag-logo.png"
             alt="JAG Cybersecurity"
-            width={44}
-            height={48}
-            className="h-10 w-auto"
+            width={64}
+            height={70}
+            className="h-14 w-auto"
           />
           <button
             ref={closeRef}

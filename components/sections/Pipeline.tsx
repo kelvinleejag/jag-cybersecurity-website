@@ -9,7 +9,7 @@ const TONE: Record<string, string> = {
 
 export function Pipeline() {
   return (
-    <section id="pipeline" className="bg-bg-base py-section">
+    <section id="pipeline" className="py-section">
       <div className="mx-auto max-w-container px-gutter">
         <FadeInOnScroll>
           <p className="font-mono text-eyebrow uppercase tracking-eyebrow text-brand-cyan">

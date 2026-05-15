@@ -5,7 +5,7 @@ import { Linkedin } from 'lucide-react';
 
 export function Founder() {
   return (
-    <section id="founder" className="bg-bg-base py-section">
+    <section id="founder" className="py-section">
       <div className="mx-auto max-w-container px-gutter">
         <div className="grid grid-cols-1 md:grid-cols-5 gap-12 items-center">
           <FadeInOnScroll className="md:col-span-2 block">

@@ -6,7 +6,7 @@ export function Hero() {
   return (
     <section
       id="hero"
-      className="relative min-h-[90vh] flex items-center justify-center overflow-hidden bg-bg-base px-gutter pt-32 pb-section"
+      className="relative min-h-[90vh] flex items-center justify-center overflow-hidden px-gutter pt-32 pb-section"
     >
       <div
         className="pointer-events-none absolute inset-0 opacity-0 animate-glow-bloom"

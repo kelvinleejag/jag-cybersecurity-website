@@ -4,7 +4,7 @@ import { fiveLayers } from '@/lib/content';
 
 export function FiveLayers() {
   return (
-    <section id="five-layers" className="bg-bg-base py-section">
+    <section id="five-layers" className="py-section">
       <div className="mx-auto max-w-container px-gutter">
         <FadeInOnScroll>
           <p className="font-mono text-eyebrow uppercase tracking-eyebrow text-brand-cyan">

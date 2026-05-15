@@ -6,7 +6,7 @@ const ICONS: Record<string, LucideIcon> = { ShieldOff, AlertTriangle, Users, Net
 
 export function Threats() {
   return (
-    <section id="threats" className="bg-bg-base py-section">
+    <section id="threats" className="py-section">
       <div className="mx-auto max-w-container px-gutter">
         <FadeInOnScroll>
           <p className="font-mono text-eyebrow uppercase tracking-eyebrow text-brand-cyan">

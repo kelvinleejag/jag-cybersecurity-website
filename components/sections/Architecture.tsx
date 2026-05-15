@@ -1,10 +1,10 @@
+import Image from 'next/image';
 import { FadeInOnScroll } from '@/components/ui/FadeInOnScroll';
-import { ArchitectureDiagram } from '@/components/ui/ArchitectureDiagram';
 import { architecture } from '@/lib/content';
 
 export function Architecture() {
   return (
-    <section id="architecture" className="bg-bg-base py-section">
+    <section id="architecture" className="py-section">
       <div className="mx-auto max-w-container px-gutter">
         <FadeInOnScroll>
           <p className="font-mono text-eyebrow uppercase tracking-eyebrow text-brand-cyan">
@@ -20,8 +20,16 @@ export function Architecture() {
           <p className="mt-6 max-w-[65ch] text-body text-text-secondary">{architecture.lede}</p>
         </FadeInOnScroll>
         <FadeInOnScroll delay={0.5}>
-          <div className="mt-16">
-            <ArchitectureDiagram />
+          <div className="mt-16 rounded-2xl overflow-hidden border border-border-default bg-bg-surfaceMuted shadow-glow-md">
+            <Image
+              src="/assets/architecture-overview.png"
+              alt="JAG Agentic AI Cybersecurity Gateway architecture: untrusted internet on the left connects via wired or wireless to the central JAG-powered NVIDIA Jetson Orin NX module — running Edge AI Processing, Adaptive Threat Management, and Intelligent Gateway layers — which then secures workstations, IoT systems, IP surveillance, and industrial control/SCADA/PLC devices on the internal network."
+              width={1920}
+              height={1080}
+              className="w-full h-auto"
+              sizes="(max-width: 1280px) 100vw, 1280px"
+              priority={false}
+            />
           </div>
         </FadeInOnScroll>
         <FadeInOnScroll delay={0.7}>

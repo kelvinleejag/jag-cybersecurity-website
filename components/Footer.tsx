@@ -45,9 +45,9 @@ export default function Footer() {
               <Image
                 src="/assets/jag-logo.png"
                 alt="JAG Cybersecurity"
-                width={56}
-                height={61}
-                className="h-14 w-auto"
+                width={96}
+                height={105}
+                className="h-24 w-auto"
               />
             </Link>
             <p className="mt-4 text-sm text-text-tertiary max-w-[28ch]">

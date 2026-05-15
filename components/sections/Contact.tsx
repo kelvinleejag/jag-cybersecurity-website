@@ -36,7 +36,7 @@ export function Contact() {
   };
 
   return (
-    <section id="contact" className="bg-bg-base py-section">
+    <section id="contact" className="py-section">
       <div className="mx-auto max-w-container px-gutter">
         <FadeInOnScroll>
           <p className="font-mono text-eyebrow uppercase tracking-eyebrow text-brand-cyan">

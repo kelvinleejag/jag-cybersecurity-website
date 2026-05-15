@@ -8,7 +8,7 @@ const ICONS: Record<string, LucideIcon> = { Activity, Zap, Eye, Lock };
 export function Solution() {
   return (
     <>
-      <section id="solution" className="bg-bg-base py-section">
+      <section id="solution" className="py-section">
         <div className="mx-auto max-w-container px-gutter">
           <FadeInOnScroll>
             <p className="font-mono text-eyebrow uppercase tracking-eyebrow text-brand-cyan">

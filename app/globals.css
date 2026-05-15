@@ -34,6 +34,44 @@ body {
   }
 }
 
+/* Ambient ribbon-of-light background flow. Each path translates horizontally
+   on a long, slightly-different loop so the layered ribbons drift past each
+   other for a parallax depth effect. GPU-accelerated transform-only animation;
+   reduced-motion guarded by the global blanket below. */
+@keyframes ribbon-drift-a {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-30%); }
+}
+@keyframes ribbon-drift-b {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-22%); }
+}
+@keyframes ribbon-drift-c {
+  from { transform: translateX(-5%); }
+  to   { transform: translateX(-35%); }
+}
+
+.ribbon-flow-1 {
+  animation: ribbon-drift-a 38s ease-in-out infinite alternate;
+  will-change: transform;
+}
+.ribbon-flow-2 {
+  animation: ribbon-drift-b 28s ease-in-out infinite alternate;
+  will-change: transform;
+}
+.ribbon-flow-3 {
+  animation: ribbon-drift-c 32s ease-in-out infinite alternate;
+  will-change: transform;
+}
+.ribbon-flow-4 {
+  animation: ribbon-drift-b 36s ease-in-out infinite alternate-reverse;
+  will-change: transform;
+}
+.ribbon-flow-5 {
+  animation: ribbon-drift-a 44s ease-in-out infinite alternate-reverse;
+  will-change: transform;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

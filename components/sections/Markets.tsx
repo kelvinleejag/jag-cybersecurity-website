@@ -6,7 +6,7 @@ const ICONS: Record<string, LucideIcon> = { Banknote, Radio, Zap, Landmark, Hear
 
 export function Markets() {
   return (
-    <section id="markets" className="bg-bg-base py-section">
+    <section id="markets" className="py-section">
       <div className="mx-auto max-w-container px-gutter">
         <FadeInOnScroll>
           <p className="font-mono text-eyebrow uppercase tracking-eyebrow text-brand-cyan">
