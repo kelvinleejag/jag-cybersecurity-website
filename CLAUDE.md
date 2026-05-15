@@ -5,18 +5,26 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ---
 doc_id: CLAUDE-CODE-CHARTER-JAG-WEBSITE
 title: Claude Code Operating Charter — World-Class Web Design Edition
-version: 1.2
+version: 2.0
 status: ACTIVE
 owner: Kelvin Lee
-effective_date: 2026-05-14
-last_amended: 2026-05-15 (motion-craft + anti-pattern harvest — §3.2.1, §10.2)
+effective_date: 2026-05-15
+last_amended: 2026-05-15 (v2.0 — structural §0 routing change; trimmed from proposed v1.3)
+supersedes: v1.2 (2026-05-15 motion-craft + anti-pattern harvest)
 project: JAG Cybersecurity — Marketing Website (Phase 1)
 project_root: /Users/cavslee/Projects/JAG/01_website
 canonical_path: ./CLAUDE.md
+sha256_body: 4ea6f1937f9066548cd38febde6c6071ffcf43d05bccc385cd2c958c17cb5b3f
+sha256_canonical_cmd: tail -n +<frontmatter_end_line+1> ./CLAUDE.md | shasum -a 256
 review_cadence: monthly OR upon any LESSON-LEARNED addition
+host: MacBook Air (Apple Silicon) — cavslee@Kelvins-MacBook-Air
+project_type: Next.js 14 static export → Cloudflare Pages
+production_url: https://www.jag-cybersecurity.io
+parent_program: JAG Cybersecurity (sovereign Agentic AI for cybersecurity)
+strategic_anchor: NVIDIA Inception Program evaluation, sovereign-AI investor outreach
 ---
 
-# Claude Code Operating Charter — World-Class Web Design Edition
+# Claude Code Operating Charter — World-Class Web Design Edition v2.0
 
 > **MASTER MANTRA** — *Think deeply. Act methodically. Validate relentlessly. Learn continuously. Execute decisively.*
 >
@@ -28,67 +36,126 @@ The intent: **top 0.01% craft** — design quality, code quality, performance, a
 
 ---
 
+## Table of Contents
+
+- §0 · Pre-Execution Protocol
+- §1 · The Ten Permanent Governance Rules
+- §2 · Structured Execution Pipeline
+- §3 · Craft Benchmarks (top 0.01% bar)
+- §4 · Tooling Priority
+- §5 · Available Skills Registry
+- §6 · MEMORY.md Integration *(reserved)*
+- §7 · Operational Quick-Reference
+- §8 · Failure & Escalation Protocol
+- §9 · Self-Improvement Loop
+- §10 · Document Control
+- §11 · Design-Intent North Star
+- §12 · Project Quick-Context
+- Appendix A · Defect-Entry Schema
+- Appendix B · Pre/Post-Install SHA Workflow
+
+---
+
 ## 0 · PRE-EXECUTION PROTOCOL (mandatory, every prompt)
 
-Before producing any output, complete this sequence.
-
 ### 0.1 Read & Parse
-Identify: (a) intent, (b) scope, (c) target files/routes/components, (d) reversibility class (Type-1 irreversible / Type-2 reversible), (e) design vs. code vs. content task.
 
-### 0.2 Team Coordination Declaration *(MANDATORY HEADER)*
-Open every response with:
+Before producing any output, identify:
+(a) intent, (b) scope, (c) target files / routes / components / assets, (d) **action class** (§0.2), (e) design discipline domain.
+
+### 0.2 Action Class Definitions
+
+Every operation falls into exactly one class. Classification is mechanical, not subjective.
+
+| Class | Definition | Examples |
+|---|---|---|
+| **Type-0 Read-Only** | No state change anywhere. | `ls`, `cat`, `grep`, `git status`, `git log`, opening a file to read, asking the owner a question, viewing dev-server output, reading Playwright reports. |
+| **Type-1 Irreversible** | No automated rollback path; manual or third-party recovery required. | `git push --force`, deploy to Cloudflare Pages production, `npm publish`, sending a webhook, deleting a remote branch, removing a DNS record on `jag-cybersecurity.io`, posting to social media. |
+| **Type-2 Reversible** | Documented automated rollback (backup / git revert / re-deploy previous). | File edit paired with git commit, local `npm run dev` restart, `npm install <pkg>` (counter: `npm uninstall`), Cloudflare Pages preview deploy, design-token change, content edit. |
+
+When in doubt between Type-1 and Type-2, classify as Type-1 (the stricter discipline).
+
+### 0.3 Coordination Block (Tiered)
+
+Open every response with a coordination signal. The form is mechanical based on action class.
+
+**ABBREVIATED form** — for Type-0 read-only AND pure clarification questions:
+
+```
+Coord: <skill-list, or NONE — owned task: <name>>
+```
+
+(One line, ≤140 chars.)
+
+**Exception — ABBREVIATED is FORBIDDEN even for Type-0 reads** on these audit-sensitive paths (use FULL block):
+- `.env`, `.env.local`, `.env.production`, or any file containing API keys / tokens / secrets
+- `~/.ssh/`, `~/.aws/`, `~/.npmrc` (if it contains auth tokens), `~/.docker/config.json`
+- `package-lock.json` *immediately before* a publish or production deploy
+- `.claude/settings.json` *immediately before* an edit (config governs permission boundaries)
+- Cloudflare API credentials, deploy tokens (wherever stored)
+- Any file containing PII or user analytics data
+
+**FULL form** — for any Type-1 or Type-2 action, multi-skill coordination, any prompt requesting code / config / asset / content mutations, OR any audit-sensitive Type-0 read:
 
 ```
 ═══════════════════════════════════════════════════════════
 TEAM COORDINATION (pre-execution declaration)
 ───────────────────────────────────────────────────────────
-Skills invoked      : <comma-separated list, or "NONE — <reason>">
+Skills invoked      : <comma-separated list, or "NONE — owned task: <name>">
 Plugins/agents      : <comma-separated list, or "NONE">
 Primary role        : <skill name> — <responsibility>
 Supporting roles    : <skill name> — <responsibility>; ...
 Sync model          : <sequential | parallel | majority-consensus>
-Design intent       : <visual direction in one phrase>
-Reversibility class : <Type-1 irreversible | Type-2 reversible>
+Design intent       : <one-phrase visual direction tied to §11 North Star>
+Action class        : <Type-0 | Type-1 | Type-2>
 Pre-flight status   : <PASS — proceeding | HOLD — clarification needed>
 ═══════════════════════════════════════════════════════════
 ```
 
 **Missing or malformed coordination block = governance violation.**
 
-### 0.3 Routing Matrix
+### 0.4 Routing Matrix
 
 | Skill match | Action |
 |---|---|
 | Exactly one | Invoke it; declare as Primary. |
-| Multiple, non-conflicting | Invoke all; declare Primary by closest scope match; others Supporting. |
-| Multiple, conflicting | Surface positions with labels. Do not auto-resolve. |
-| Zero matches *(non-owned task)* | Propose creating a new skill; await acknowledgment. |
-| Zero matches *(owned task — see §0.4)* | Execute directly; declare `Skills invoked: NONE — owned task: <name>`. |
+| Multiple, non-conflicting | Invoke all; declare Primary by **scope-closest match (owner-judgment read of which skill's `description` most directly addresses the prompt's core intent)**; others Supporting; sync = parallel. |
+| Multiple, conflicting | (1) Pick scope-closest by owner-judgment read; (2) if genuinely tied → **invoke all tied skills in parallel and present each perspective explicitly labeled**, then let the owner disambiguate. **Never break a true tie with mtime, alphabetical sort, or majority vote — surface the tie honestly.** |
+| Zero matches (non-owned task) | Notify owner: *"no existing skill matches — propose creating skill `<name>` for `<purpose>`"*; await acknowledgment. |
+| Zero matches (owned task, §0.5) | Execute directly; declare `Skills invoked: NONE — owned task: <name>`. |
+| Skill registry entry tagged `[PLANNED]` | Treat as non-existent for routing; do not invoke. |
 
-### 0.4 Owned Tasks (carve-outs)
+### 0.5 Owned-Task Carve-Outs
 
-| Owned Task | Scope |
-|---|---|
-| Charter / governance doc management | Edit this file, related governance docs; backup + version bump required |
-| Trivial read-only checks | `ls`, `cat`, `git status`, dev-server status (no state change) |
-| Pure clarification questions | Asking the owner a question with no side effects |
+| Owned Task | Scope | Authority basis |
+|---|---|---|
+| Charter / governance doc management | Edit `CLAUDE.md`, design-system docs, `.claude/MEMORY.md`; timestamped backup, frontmatter integrity, index sync. | Owner directive |
+| Trivial read-only verification | `ls`, `cat`, `grep`, `git status`, `git log` — strictly no state change, strictly non-audit-sensitive paths (see §0.3 exception). | Operational efficiency |
+| Pure clarification questions | Asking the owner a question with no side effects. | ASK-BEFORE-ACTING (§1.5) |
+| Local dev-server lifecycle | `npm run dev` start/stop on localhost — local only, no deploy. | Operational efficiency |
 
 ---
 
 ## 1 · THE TEN PERMANENT GOVERNANCE RULES
 
 ### 1.1 SKILL-FIRST
-Every prompt → best-matched skill(s) invoked → declared in coordination header. No silent execution.
+Every prompt → best-matched skill(s) invoked → declared in coordination header (§0.3). No silent execution.
 
-### 1.2 BACKUP-FIRST
-- Every file edit preceded by a backup (git commit, named branch, or filesystem copy with timestamp + checksum).
-- Backup verified to exist **before** any mutation.
-- Rollback procedure documented in the same response.
-- No exceptions, including for "one-line fixes".
-- This project's existing convention: `<file>.backup-YYYYMMDD-HHMMSS` filesystem copies kept beside originals (see `app/page.tsx.backup-20260425-163522`, `tailwind.config.ts.backup-*`, etc.). Continue this pattern; do not delete prior backups without explicit owner approval.
+### 1.2 BACKUP-FIRST (Type-1 and Type-2 only)
+Every file edit preceded by a verifiable rollback path:
 
-### 1.3 FIX-BUGS-ON-THE-SPOT
-New bug discovered mid-task → pause, diagnose, fix, validate, then resume. No accumulating known defects.
+- **L1 (preferred):** git commit on a working branch — `git add -A && git commit -m "snapshot: pre_<tag>"`. Acceptable shortcut: `git stash push -m "pre_<tag>"`. Rationale: fast same-session rollback via `git reset --hard HEAD~1`.
+- **L2 (project convention):** `<file>.backup-YYYYMMDD-HHMMSS` filesystem copy beside the original (see `app/page.tsx.backup-20260425-163522`, `tailwind.config.ts.backup-*`, etc.). Rationale: durable record surviving branch deletion, rebase, force-push. Continue this pattern; do not delete prior backups without explicit owner approval.
+
+Backup verified to exist **before** any mutation. Rollback procedure documented in the same response. No exceptions, including for "one-line fixes."
+
+### 1.3 FIX-OR-FILE
+When a new bug or design debt is discovered mid-task:
+
+- **In-scope AND cheap** → fix in same diff. Document in the same response.
+- **Out-of-scope OR expensive** → file a `WEB-DEFECT-YYYYMMDD-NNN` entry (Appendix A), schedule to a wave (Hotfix / Pre-launch / Design-debt / Backlog), resume original task.
+
+Principle: **never silently ignore.**
 
 ### 1.4 DESIGN-EXCELLENCE STANDARD *(11-discipline mapping)*
 All work maps to these disciplines before proceeding:
@@ -107,27 +174,50 @@ Security            — OWASP Top 10 web, CSP, sanitisation, auth flows
 Code quality        — type safety, lint-clean, test coverage, DX
 ```
 
-Declared in the coordination header. Non-compliant designs **rejected or redesigned**.
+Non-compliant designs **rejected or redesigned** before implementation.
 
-### 1.5 NO-ASSUMPTIONS *(95% confidence threshold)*
-Ask until ≥95% confident on intent, audience, brand direction, content, scope, target environment. Slow questioning beats fast wrong execution.
+### 1.5 ASK-BEFORE-ACTING
+Ask before acting when **any** of the following is unresolved:
+
+1. **Target environment** (local dev / Cloudflare preview / Cloudflare production) not explicit.
+2. **Action class** is Type-1 (irreversible).
+3. **Output path** or destination not specified — including which component file, which route, which design token.
+4. **Two or more skills** give conflicting guidance (per §0.4).
+5. **Operation crosses** a previously-undocumented boundary (new dependency, new route, new env var, new external service, new domain).
+6. **Destructive verb directed at the action I'm about to take** — `delete`, `drop`, `remove`, `rm`, `force-push`, `revert`, `decommission`, `unpublish`, `purge`, `destroy`, `revoke`, `expire`, `wipe` (case-insensitive). Confirm exact target and intent before execution. *Narrative use* of these verbs in prose ("delete the duplicate string") does not trigger §1.5; only verbs that name the operation I am about to perform.
+7. **Design ambiguity** — brand voice, visual direction, target audience, or content stance not specified or contradicted by §11 North Star.
+
+§1.5 applies to **Type-1 and Type-2 actions only**. Type-0 read-only operations are exempt — except for audit-sensitive Type-0 reads per §0.3, which still require the FULL coordination block but do not invoke §1.5.
 
 ### 1.6 AUDIT-EXISTING-FIRST
-Before creating a new component / route / utility / token / asset, audit existing:
-1. Use as-is, or
-2. Refine/extend, or
-3. Replace (justified in writing).
+Before creating any new component / route / utility / token / asset, audit existing:
+1. **Use as-is** (preferred), or
+2. **Refine / extend / compose**, or
+3. **Replace** (justified in writing).
 
-Prevents component duplication, design-token drift, and dead code. Specific to this repo:
+Default assumption: existing artifacts were designed by prior sessions and likely function correctly.
+
+**Project-specific conventions:**
 - All marketing copy belongs in `lib/content.ts` — never inline new strings in section components.
 - All colour, type, spacing, shadow, breakpoint values belong in `tailwind.config.ts` `theme.extend` — never hard-code hex, px, or rem values in components.
 - Reusable primitives live in `components/ui/` (Container, SectionHeader, Card, FadeInOnScroll, MetricCounter). Audit these before creating a new primitive.
 
 ### 1.7 CRAFT-OVER-SCHEDULE
-Launch dates **never** justify generic-AI-looking output, accessibility shortcuts, or skipped validation. If correct craft takes longer, the timeline adjusts.
+Launch dates (NVIDIA Inception submission, investor demos) **do not** justify generic-AI output, accessibility shortcuts, or skipped validation. If correct craft takes longer, the timeline adjusts.
+
+**Escape valve** for tactical hotfixes:
+(a) `WEB-DEFECT` entry for craft follow-up (Appendix A);
+(b) Named owner + target wave for the craft fix;
+(c) Explicit deferral acknowledgment in same response;
+(d) **Maximum deferral window: ≤2 sprints OR ≤30 calendar days, whichever shorter.** Otherwise the hotfix is **not permitted** — redesign.
 
 ### 1.8 HANDOFF DOC STRUCTURE
-Handoff docs to new chat windows must cover:
+A handoff document is required when **any** of:
+(a) Current chat reaches >75% of context window;
+(b) Owner explicitly requests handoff;
+(c) A multi-day initiative spans chat sessions.
+
+Handoff docs must cover:
 1. Active governance rules
 2. Project status / current sprint
 3. Completed features / milestones
@@ -150,21 +240,27 @@ Strict sequential guidance with explicit checkpoints. Each step has a defined in
 
 ## 2 · STRUCTURED EXECUTION PIPELINE
 
-Every non-trivial task flows through these phases. Skipping is a violation.
+Every non-trivial task flows through these phases. Skipping is a governance violation.
 
 ```
 Phase 1 — DEFINE        Problem statement · constraints (browser support, perf budget, brand) · success criteria
-Phase 2 — HYPOTHESIZE   ≥2 design / implementation paths · rank by craft, perf, accessibility, effort
+Phase 2 — HYPOTHESIZE   ≥2 design / implementation paths · rank by craft, perf, accessibility, effort · action class
 Phase 3 — PLAN          Atomic steps · inputs / outputs / validation method per step
 Phase 4 — IMPLEMENT     Smallest viable unit · backup verified · component-first, no large untested changes
-Phase 5 — VALIDATE      Visual review · responsive review · a11y audit · perf check · unit + e2e tests
+Phase 5 — VALIDATE      Visual review (light + dark, mobile + desktop) · responsive review · a11y audit
+                        (axe + Lighthouse + manual keyboard pass) · perf check · unit + e2e tests.
+                        REQUIREMENT: the production build (`npm run build && npx serve out -p 3001`)
+                        is mandatory before declaring any visual work complete. `next dev` and the
+                        static export differ in CSP enforcement, hydration timing, and bundle
+                        composition. The canonical reminder is commit 81fb7f8: a fix that passed
+                        dev shipped broken to production. Localhost-on-M-series-Mac is also ~10×
+                        faster than mid-tier mobile; run Lighthouse with mobile throttle profile
+                        before declaring perf complete.
 Phase 6 — ANALYZE       Expected vs actual · root cause analysis on any deviation
 Phase 7 — ITERATE/SCALE Polish OR ship · update design system, component docs, changelog
 ```
 
-**Validation evidence required**: screenshots (light + dark, mobile + desktop), Lighthouse scores, axe report, type-check + lint output, test results.
-
-**Project-critical validation gate** — the production build (`npm run build && npx serve out -p 3001`) is mandatory before declaring any visual work complete. `next dev` and the static export differ in CSP enforcement, hydration timing, and bundle composition. The canonical reminder is commit `81fb7f8`: a fix that passed dev shipped broken to production.
+**Validation evidence required**: screenshots (light + dark, mobile + desktop), Lighthouse scores, axe report, type-check + lint output, test results — captured in same response or linked from commit.
 
 ---
 
@@ -173,8 +269,8 @@ Phase 7 — ITERATE/SCALE Polish OR ship · update design system, component docs
 A response is not complete unless these are satisfied for the work in scope.
 
 ### 3.1 Visual & Layout
-- Type scale defined (modular scale, fluid clamp), not arbitrary px values
-- Spacing on a consistent scale (4 / 8 px system or design tokens)
+- Type scale defined (modular scale, fluid `clamp()`), not arbitrary px values
+- Spacing on a consistent scale (4/8 px system or design tokens)
 - Colour system uses tokens with semantic names (`bg-elevated`, `accent`, `text-secondary`) — never raw hex
 - Dark mode is the **only** mode for this project (sovereign-AI cybersecurity aesthetic). No light-mode toggle.
 - No bootstrap-default look; intentional layout decisions justified
@@ -184,9 +280,9 @@ A response is not complete unless these are satisfied for the work in scope.
 - Microinteractions <300ms, with easing functions chosen, not default
 - Reduced-motion media query honoured (already wired in `app/globals.css`)
 - Focus order matches visual order
-- **Motion library policy:** the homepage components have been deliberately stripped of `framer-motion` — see §10 reference list. Do not reintroduce `framer-motion` on the `/` route without an explicit owner approval and bundle-size justification.
+- **Motion library policy:** the homepage components have been deliberately stripped of `framer-motion` — see §12 reference list. Do not reintroduce `framer-motion` on the `/` route without explicit owner approval and bundle-size justification.
 
-#### 3.2.1 Animation craft standard *(harvested 2026-05-15 — Emil Kowalski design-engineering skill)*
+#### 3.2.1 Animation craft standard *(harvested 2026-05-15 — Emil Kowalski design-engineering skill; per §9.2 harvest pattern)*
 
 **Decision gate — answer in order before writing any animation:**
 1. *Should this animate at all?* Frequency decides. 100+×/day (keyboard shortcuts, command toggle) → never animate. Tens of ×/day (hover, list nav) → reduce or remove. Occasional (modal, drawer, toast) → standard animation. Rare / first-time (onboarding, celebration) → delight allowed. **Never animate keyboard-initiated actions** — they repeat hundreds of times daily; motion makes them feel slow.
@@ -198,23 +294,24 @@ A response is not complete unless these are satisfied for the work in scope.
 - Pressable elements get `transform: scale(0.97)` on `:active` — instant "the UI heard you" feedback.
 - Never animate from `scale(0)` — nothing in the real world appears from nothing. Start `scale(0.95)` + `opacity: 0`.
 - Popovers scale from their trigger (`transform-origin` set to the trigger), not from centre. Modals are the exception — they stay centred.
-- Only animate `transform` and `opacity` — they skip layout + paint and run on the GPU. Animating `width` / `height` / `margin` / `padding` triggers all three (this is also the §10.2 `layout-transition` anti-pattern).
+- Only animate `transform` and `opacity` — they skip layout + paint and run on the GPU. Animating `width` / `height` / `margin` / `padding` triggers all three.
 - Exit faster than enter. Gate hover effects behind `@media (hover: hover) and (pointer: fine)`. Stagger list entries 30–80 ms apart.
 - `prefers-reduced-motion` means *fewer and gentler*, not zero — keep opacity / colour transitions that aid comprehension, drop movement.
 
-**Keyframes-vs-transitions note (project-specific):** the source skill prefers CSS *transitions* over *keyframes* for rapidly re-triggered UI (keyframes restart from zero on interrupt). This does **not** contradict `FadeInOnScroll` / `MetricCounter`, which use CSS keyframes deliberately — those are one-shot scroll reveals, never rapidly re-triggered, so keyframes are correct there. Do not "fix" them. The skill's broader conclusion — *CSS animations run off the main thread; JS motion libraries drop frames under load* — independently confirms the commit `6c2f230` framer-motion removal (§11).
+**Keyframes-vs-transitions note (project-specific):** the source skill prefers CSS *transitions* over *keyframes* for rapidly re-triggered UI (keyframes restart from zero on interrupt). This does **not** contradict `FadeInOnScroll` / `MetricCounter`, which use CSS keyframes deliberately — those are one-shot scroll reveals, never rapidly re-triggered, so keyframes are correct there. Do not "fix" them. The skill's broader conclusion — *CSS animations run off the main thread; JS motion libraries drop frames under load* — independently confirms the commit `6c2f230` framer-motion removal (§12).
 
 ### 3.3 Accessibility (WCAG 2.2 AA minimum)
 - Semantic HTML first; ARIA only where needed
-- Colour contrast ≥4.5:1 body / ≥3:1 large
+- Colour contrast ≥4.5:1 body / ≥3:1 large or UI (**critical for dark theme** — light grey on near-black often fails; verify with axe)
 - Keyboard-only navigation works end-to-end
 - Screen-reader labels for icons (`lucide-react` icons need `aria-label` or `aria-hidden`), form controls, landmark roles
 - `prefers-reduced-motion`, `prefers-color-scheme` respected
 
 ### 3.4 Performance Budgets
-- LCP <2.5s · INP <200ms · CLS <0.1 on mid-tier mobile
+- LCP <2.5s · INP <200ms · CLS <0.1 on mid-tier mobile (4G throttle)
 - **Project baseline (do not regress):** First Load JS for `/` is 91.7 kB; page-specific JS is 4.32 kB. Any change pushing First Load JS above 100 kB requires written justification.
 - Initial JS bundle <170 kB gzipped per route (project current is well under)
+- **JAG-specific Lighthouse SLA: Performance / A11y / Best-Practices / SEO ≥95** — enforced by `@lhci/cli` (`lighthouserc.json`). Lighthouse Performance <95 is a §8 hard-stop for production deploy.
 - Image strategy: responsive `srcset`, modern formats (AVIF/WebP), lazy below fold. Note `next.config.mjs` sets `images: { unoptimized: true }` because of static export — handle responsiveness manually.
 - Fonts: `font-display: swap`, subset, preloaded if critical
 - No layout-shifting late-loaded content
@@ -224,11 +321,11 @@ A response is not complete unless these are satisfied for the work in scope.
 - Lint-clean, formatter-clean
 - Components composable, props typed, no `any` leaks
 - No magic numbers; tokens / constants named (use `tailwind.config.ts` and `lib/content.ts`)
-- Tested at appropriate level (unit for logic, e2e for flows) — no test runner installed yet; if introducing one, propose Vitest + Playwright in writing first
+- Tested at appropriate level (unit for logic, e2e for flows) — Playwright + axe wired in `tests/`; full pre-merge gate in §7.
 
 ### 3.6 SEO & Semantics
 - One `<h1>` per page; heading order intact
-- `<title>`, meta description, OG / Twitter cards (OG image is a known Phase 1.5 gap — see §10)
+- `<title>`, meta description, OG / Twitter cards (OG image is a known Phase 1.5 gap — see §12)
 - Structured data (JSON-LD) where applicable
 - Canonical URL, sitemap, robots
 - Performance contributes to SEO — see §3.4
@@ -249,6 +346,10 @@ A response is not complete unless these are satisfied for the work in scope.
 | Accessibility check | axe / Lighthouse / manual keyboard pass — all three |
 | **Production parity check** | `npm run build && npx serve out -p 3001` — never trust `next dev` alone |
 | **Header-policy edits** | Diff `next.config.mjs` `securityHeaders` against `public/_headers` programmatically — they MUST stay in sync by value |
+| Diff before commit | `git diff --stat && git diff` — never blind-commit |
+| Verify file ownership / mode | `stat -f '%Su:%Sg %Lp %N' <file>` *(macOS BSD stat)* |
+| Real-mobile perf check | Lighthouse with mobile throttle profile, or Safari Web Inspector connected to iPhone via USB |
+| Design-token usage | `rg "color:|background:|border:" components/ app/` for hex/rgb literals — detects token bypass |
 
 ---
 
@@ -310,11 +411,17 @@ Config files:
 | `motion-designer` | New animation, missing four-state on interactive element, motion inconsistency, reduced-motion unverified, transient UI without enter/exit | Five-phase audit: inventory → consistency → state audit → reduced-motion sweep → token consolidation; four-state requirement; framer-motion-ban enforcement; bundle-delta gate |
 | `seo-specialist` | Lighthouse SEO <95 OR =100 but social/structured-data unverified, adding OG/Twitter/JSON-LD/sitemap/robots, investor-audience prep, new content surface | Six-phase audit: metadata → structured-data → crawlability → social preview → semantic HTML → AI-search readiness; mandatory external-validator runs |
 
-These skills were built via TDD pilot (full RED → GREEN → REFACTOR for `accessibility-auditor`; path-C RED + 1 GREEN verify for the other four — see §8.1 for the authorized deviation). All skills surface relevant evidence requirements, project-specific commands, and red-flag STOP conditions.
+These skills were built via TDD pilot (full RED → GREEN → REFACTOR for `accessibility-auditor`; path-C RED + 1 GREEN verify for the other four — see §9.4 for the authorized deviation). All skills surface relevant evidence requirements, project-specific commands, and red-flag STOP conditions.
 
 ---
 
-## 6 · OPERATIONAL QUICK-REFERENCE
+## 6 · MEMORY.md INTEGRATION *(reserved)*
+
+Reserved for the protocol governing `.claude/MEMORY.md` once that file is adopted. Tracked by `WEB-TASK-20260515-D` in §12. Until then: do not rely on or cite a `.claude/MEMORY.md` file in this project — it does not yet exist. This section will be authored at adoption time so the protocol matches the actual artifact.
+
+---
+
+## 7 · OPERATIONAL QUICK-REFERENCE
 
 ### Commands
 
@@ -363,35 +470,97 @@ No Storybook / Chromatic / Percy installed. Use Playwright MCP to capture paired
 
 ---
 
-## 7 · FAILURE & ESCALATION PROTOCOL
+## 8 · FAILURE & ESCALATION PROTOCOL
 
 | Failure mode | Response |
 |---|---|
-| Build / typecheck / lint fails | Hard stop. Fix before further changes. |
-| Backup not verifiable | Hard stop. Do not proceed with edits. |
-| Accessibility regression | Hard stop. Roll back. Redesign. |
-| Performance budget breach (First Load JS > 100 kB on `/`) | Hard stop. Investigate before merge. |
-| `next.config.mjs` and `public/_headers` drift | Hard stop. Reconcile by value, not by eye. |
-| Skills produce contradictory output | Surface both with labels. Owner decides. |
-| Confidence < 95% on direction | Ask. Always. |
+| Skill invocation fails | Re-attempt once with corrected parameters. On second failure → notify owner with diagnostic. |
+| Skills produce contradictory output | Apply §0.4 tiebreaker — scope-closest first; true tie → invoke all in parallel and present each perspective labeled. |
+| Build / typecheck / lint fails | **Hard stop.** Fix before further changes. |
+| Backup not verifiable | **Hard stop.** Do not proceed with edits. |
+| Accessibility regression | **Hard stop.** Roll back. Redesign. |
+| Performance budget breach (First Load JS > 100 kB on `/`) | **Hard stop.** Investigate before merge. |
+| **Lighthouse score <95 on any of Perf / A11y / BP / SEO** | **Hard stop** for production deploy. Lower scores acceptable on dev branches only. |
+| `next.config.mjs` and `public/_headers` drift | **Hard stop.** Reconcile by value, not by eye. |
+| §1.5 ASK-BEFORE-ACTING trigger fires | Ask owner. Do not infer past trigger. |
+| PLANNED skill / artifact is routing match | Notify owner; proceed with closest ACTIVE skill OR ask. |
+| Body SHA verification fails (Appendix B) | **Hard stop.** Charter install NOT complete. Re-stage and retry. |
+| Secret accidentally committed | **Hard stop.** Rotate first (Type-1 operation); history rewrite as separate confirmed operation. |
+| Output exhibits generic-AI tell (§11 / §11.2) | Self-scan once before final response; if §11.2 anti-pattern present, rewrite once. **Two consecutive rejections → escalate to owner**, do not loop further. |
+| Runtime dependency added without justification | **Hard stop.** Uninstall. File defect. |
 
 ---
 
-## 8 · SELF-IMPROVEMENT LOOP
+## 9 · SELF-IMPROVEMENT LOOP
 
 This charter is a **living document**.
 
+### 9.1 Addition Triggers
+
 | Trigger | Action |
 |---|---|
-| New LESSON-LEARNED | Append to §1 (rule-level) or §4 (tooling-level) within 24h |
+| New LESSON-LEARNED | Append to §1 (rule), §3 (benchmark), or §4 (tooling) within 24h |
 | New skill added | Update §5 registry same session |
-| New owned task | Update §0.4 with authority basis |
+| New owned task | Update §0.5 with authority basis |
+| External skill harvest | Follow §9.2 procedure |
 | Monthly | Diff vs prior version, justify, bump minor |
 | Annual / major redesign | Full re-validation, bump major |
 
 Discipline on every change: **backup → edit → checksum → frontmatter update → commit**.
 
-### 8.1 Authorized deviations from strict TDD-for-skills
+### 9.2 External-Skill Harvest Pattern
+
+External taste / craft skills (e.g. Emil Kowalski's design-engineering skill, `pbakaus/impeccable`) often encode valuable knowledge that does not justify installing the whole skill (per §11.1: "Skill registry: STABLE"). The harvest pattern extracts non-conflicting items into this charter while explicitly documenting rejections with rationale.
+
+**Procedure — every harvest follows these five phases:**
+
+#### Phase H1 — SOURCE
+- Identify the external skill / catalogue / guide.
+- Record provenance: author, URL or repo, version / commit SHA if versioned, date of harvest.
+- Read the source in full. Skim-harvests produce contamination.
+
+#### Phase H2 — DIFF
+For each rule / claim / heuristic in the source, classify as:
+- **ALREADY-COVERED** — this charter already says it (cite §).
+- **NEW-ADOPT** — adds genuine value, does not conflict with charter.
+- **NEW-REJECT** — conflicts with a deliberate charter decision (brand, architecture, audience). Reject with rationale.
+- **DEFER** — interesting but not actionable for this project right now; park in `MEMORY.md` under "Harvest backlog" once §6 is live.
+
+#### Phase H3 — REJECT WITH RATIONALE *(load-bearing step)*
+Every NEW-REJECT item gets a one-row entry in the harvested section:
+
+| External rule | Why it does not apply to this project |
+
+The rejection table is the antibody against future audits flagging deliberate brand choices as "slop". Without it, harvested content can erase project identity over time.
+
+#### Phase H4 — ADOPT WITH ATTRIBUTION
+- Adopted items added to the relevant charter section (§3.x for craft, §11 for design intent, §4 for tooling, §1 for governance rules).
+- Provenance line: *"(harvested YYYY-MM-DD — <source>; per §9.2 harvest pattern)"* at section head.
+- If an adopted rule already echoed a charter rule, keep ours and cite the source as corroborating evidence.
+
+#### Phase H5 — VERSION BUMP & LOG
+- MINOR version bump (harvest adds rules / refines existing).
+- Changelog entry naming the source and the sections touched.
+- `MEMORY.md` entry under "Harvest log" with: date, source, adopted-count, rejected-count, deferred-count *(once §6 is live; until then, log in commit message)*.
+
+**Discipline rules:**
+- *Harvest into the charter; do not install the source skill.* See §11.1 STABLE posture. A skill installed runs every session and cannot distinguish brand choice from default. Harvested content becomes our governance, not a vendor's.
+- *Reject loudly, not quietly.* Silent rejections cause the same item to be re-proposed at every future harvest. The §11.2 REJECTED table is a forcing function against that drift.
+- *Provenance survives even after the source disappears.* If the external skill is later renamed, deleted, or abandoned, the harvested content remains attributable and reviewable.
+- *One harvest per session, maximum.* Harvest work requires focused judgment on each rule. Batching multiple harvests in one session produces contamination — items get adopted from one source and rejected from another for inconsistent reasons.
+
+**Worked examples (the canonical references):**
+- §3.2.1 Animation Craft Standard — Emil Kowalski design-engineering skill, harvested 2026-05-15. Adopted: decision gate, easing rules, duration table, technique rules. Rejected: none. Reconciled: keyframes-vs-transitions note defending `FadeInOnScroll`.
+- §11.2 Harvested Anti-Pattern Catalogue — `pbakaus/impeccable`, harvested 2026-05-15. Adopted: 8 AI-tell items, ~13 typography/layout items. Rejected: 3 (`dark-mode-default`, `monospace-as-technical`, `dark-glow` — all explicit JAG brand decisions per §11).
+
+### 9.3 Retirement Procedure (Rules / Principles Proven Wrong)
+
+A rule or principle may be retired only when:
+(a) Evidence the rule is wrong or obsolete is documented (a LESSON-LEARNED citing the inversion);
+(b) MINOR version bump with explicit "retired §X.Y" note in the changelog;
+(c) One-line entry added to `MEMORY.md` under "Retired charter rules" index *(once §6 is live; until then, the changelog entry is the canonical record)*.
+
+### 9.4 Authorized Deviations from strict TDD-for-skills *(historical record)*
 
 The `superpowers:writing-skills` skill enforces a RED → GREEN → REFACTOR loop with "re-test until bulletproof". For the 2026-05-14 custom-skill build-out (5 skills: `accessibility-auditor`, `performance-engineer`, `design-system-curator`, `motion-designer`, `seo-specialist`), the owner authorized **path C — RED + write + 1 GREEN verify, no REFACTOR loop**.
 
@@ -401,41 +570,106 @@ The `superpowers:writing-skills` skill enforces a RED → GREEN → REFACTOR loo
 
 ---
 
-## 9 · DOCUMENT CONTROL
+## 10 · DOCUMENT CONTROL
 
-- Canonical path: `/Users/cavslee/Projects/JAG/01_website/CLAUDE.md`
-- Backup pattern: `CLAUDE.md.backup-YYYYMMDD-HHMMSS` (filesystem) or git commit
-- Version increment: PATCH (typo) · MINOR (rule added / refined) · MAJOR (structural)
-- Cross-references: `README.md`, `docs/superpowers/specs/`, `docs/superpowers/plans/`, `.claude/settings.json`
+- **Canonical path:** `/Users/cavslee/Projects/JAG/01_website/CLAUDE.md`
+- **Backup pattern:** `CLAUDE.md.backup-YYYYMMDD-HHMMSS` (filesystem) AND git commit
+- **Version increment rules:**
+  - **PATCH** (e.g. 2.0.0 → 2.0.1) — typo, clarification, link fix.
+  - **MINOR** (e.g. 2.0 → 2.1) — rule/principle added, refined, retired; harvest.
+  - **MAJOR** (e.g. 2.x → 3.0) — structural change to §0 routing or section taxonomy.
+- **SHA workflow:** see Appendix B. The frontmatter `sha256_body` field self-attests the charter's body content. Body SHA recompute on every install; mismatch is a §8 hard-stop.
+- **Cross-references:** `README.md`, `docs/superpowers/specs/`, `docs/superpowers/plans/`, `.claude/settings.json`, `package.json`, `tailwind.config.ts`, `next.config.mjs`, `public/_headers`.
 
 ---
 
-## 10 · DESIGN-INTENT NORTH STAR
+## 11 · DESIGN-INTENT NORTH STAR
 
 ```
-Project       : JAG Cybersecurity (Jetson-AI-Guard) — Phase 1 marketing site
-Audience      : NVIDIA Inception reviewers · sovereign-AI investors · enterprise cybersecurity buyers (SEA-first)
-Brand voice   : confident · technical · restrained · sovereign
-Visual lane   : dark editorial / cyber-restrained — deep navy field, cyan signal accents, monospace pulses
-Tone for copy : plainspoken-technical; specific over superlative; evidence over adjectives
-Anti-patterns : no bootstrap defaults · no stock illustrations · no AI-grey gradients · no glassmorphism ·
-                no framer-motion in the hot path · no light mode · no decorative emoji ·
-                no side-tab cards · no nested cards · no rounded gradient icon-tiles ·
-                no hero-metric template · no identical card grids  (full harvested list → §10.2)
-Reference work: (to be appended by owner — placeholder)
+Project        : JAG Cybersecurity (Jetson-AI-Guard) — Phase 1 marketing site
+Production URL : https://www.jag-cybersecurity.io
+Tagline        : Sovereign Agentic AI cybersecurity. Zero cloud. Zero exfiltration. Zero trust.
+
+Audience       : (1) NVIDIA Inception evaluators — technical credibility, defensible IP,
+                  GPU-native architecture, commercial viability.
+                 (2) Sovereign / data-sensitive enterprise buyers — government, defence,
+                  critical infrastructure, regulated industries. Proof, not promises.
+                 (3) Venture capital — founder credibility, market timing, moat, exit.
+                 (4) Technical practitioners (CISOs, security architects) — fine-print
+                  readers who respect technical honesty over marketing language.
+
+Brand voice    : Confident, technical, restrained, sovereign. Engineered, not marketed.
+                 Specific over abstract. Evidence over claims. The voice of someone
+                 who has shipped, not someone selling a vision.
+
+Visual lane    : Dark editorial / cyber-restrained — deep navy field, cyan signal
+                 accents, monospace pulses. Closer to Linear / Vercel / Palantir
+                 than typical AI-startup gradient-soup. Closer to a defence-industry
+                 annual report than a SaaS landing page.
+
+                 Inspiration references (the bar):
+                 - linear.app (precision, type discipline, restraint)
+                 - vercel.com (minimal chrome, content-forward, density done right)
+                 - palantir.com (institutional gravitas without bombast)
+                 - anthropic.com (the calm restraint of serious AI)
+
+Tone for copy  : Plainspoken-technical. Specific numbers (10/10 attack types blocked,
+                 5-second time-to-block, 96.6% hallucination detection rate, 6 patents
+                 / 113 claims). No exclamation marks. No "leverage." No "revolutionary."
+
+Motion stance  : Minimal & functional. CSS keyframes only (framer-motion removed by
+                 architecture decision — see §12 commit 6c2f230). Microinteractions
+                 that confirm action or guide focus. No decorative motion. No parallax.
+                 No scroll-jacking. The site moves like an instrument, not a showreel.
+                 Animation craft standard: §3.2.1.
+
+Imagery stance : Real, specific, evidence-bearing.
+                 - Real JAG logo (Phase 1.5 deliverable)
+                 - Real founder photo (Phase 1.5 deliverable) — not stock, not AI-generated
+                 - Real architecture diagrams, real dashboard screenshots, real hardware
+                 No stock photography. No AI-generated imagery. No abstract gradient art.
+
+JAG-original anti-patterns: (explicitly forbidden — see §11.2 for harvested catalogue)
+                 - Bootstrap defaults
+                 - Stock illustrations
+                 - AI-grey gradients
+                 - Glassmorphism
+                 - Framer-motion in the hot path
+                 - Light mode (dark-only is the brand decision, not a default — see §3.1)
+                 - Decorative emoji
+                 - Purple-blue-gradient hero backgrounds
+                 - "Trusted by" carousels with fake or unspecific logos
+                 - Generic SaaS-startup language ("leverage AI to revolutionise")
+                 - Exclamation marks anywhere in copy
+                 - More than one body font family
+                 - More than one accent colour
+
+Open decisions : Typography (body + mono families) and exact accent colour token are
+                 not yet decided. Tracked in §12 as WEB-TASK-20260515-A (accent),
+                 -B (body font), -C (mono font). Until decided, do not introduce new
+                 hex/rgb/font-family literals — work within existing tokens.
+
+Reference work : (to be appended by owner — placeholder)
+
+Success metric : The site is mistakeable for the website of an institutional security
+                 vendor (Palantir, Crowdstrike, SentinelOne) by a casual visitor.
+                 NVIDIA Inception evaluator reaches "this is technically serious"
+                 within 5 seconds of the fold.
+                 CISO finds the technical proof points (architecture, patents,
+                 validated metrics) within two scrolls.
 ```
 
 This block is the design contract. Every visual decision must reconcile with it or justify deviation.
 
-### 10.1 Confirmed operating defaults (2026-05-14)
+### 11.1 Confirmed operating defaults (2026-05-14)
 
 - **Budget posture: LEAN.** Runtime dependencies are kept at the current count (5). New `dependencies` require written justification. `devDependencies` are added only when they verify a charter benchmark or directly enable a Phase 1.5 deliverable.
 - **MCP servers: OPEN.** Third-party MCP servers may be used (e.g. `context7`, `playwright`) when they add evidence-grade value. No MCP that mutates project state without an audit trail.
-- **Skill registry: STABLE.** No new skills are created without an owner-approved gap analysis (see §5).
+- **Skill registry: STABLE.** No new skills are installed without an owner-approved gap analysis (see §5). External taste skills are *harvested* per §9.2, not installed.
 
-### 10.2 Harvested anti-pattern catalogue *(2026-05-15 — Impeccable skill, `pbakaus/impeccable`)*
+### 11.2 Harvested anti-pattern catalogue *(harvested 2026-05-15 — pbakaus/impeccable; per §9.2 harvest pattern)*
 
-Extends the §10 anti-pattern line. The Impeccable catalogue was diffed against this charter; only the non-conflicting items are adopted. Apply during `frontend-design` and `design-system-curator` reviews.
+Source: `pbakaus/impeccable`. The Impeccable catalogue was diffed against this charter; only the non-conflicting items are adopted. Apply during `frontend-design` and `design-system-curator` reviews.
 
 **Adopted — AI "tells" to avoid:**
 - `side-tab` — thick coloured stripe down one side of a rounded card ("the single most recognisable tell of AI-generated UI")
@@ -458,15 +692,15 @@ Extends the §10 anti-pattern line. The Impeccable catalogue was diffed against 
 
 | Impeccable rule | Why it does not apply to JAG |
 |---|---|
-| `dark-mode-default` ("retreating from a decision") | Dark mode is the *sovereign-AI cybersecurity* brand decision, not a default — §3.1, §10 North Star |
-| `monospace-as-technical` ("lazy stereotype") | "Monospace pulses" is a named brand element — §10 North Star |
-| `dark-glow` ("cyberpunk-by-default slop") | "Deep navy field, cyan signal accents" is the defined visual lane — §10 North Star |
+| `dark-mode-default` ("retreating from a decision") | Dark mode is the *sovereign-AI cybersecurity* brand decision, not a default — §3.1, §11 North Star |
+| `monospace-as-technical` ("lazy stereotype") | "Monospace pulses" is a named brand element — §11 North Star |
+| `dark-glow` ("cyberpunk-by-default slop") | "Deep navy field, cyan signal accents" is the defined visual lane — §11 North Star |
 
-The lesson: a generic taste skill cannot distinguish an intentional brand choice from a lazy default. This is the standing rationale for the §10.1 *"Skill registry: STABLE"* posture — harvest external taste skills into this charter; do not install them.
+The lesson: a generic taste skill cannot distinguish an intentional brand choice from a lazy default. This is the standing rationale for the §11.1 *"Skill registry: STABLE"* posture — harvest external taste skills into this charter (§9.2); do not install them.
 
 ---
 
-## 11 · PROJECT QUICK-CONTEXT (read once, then refer back)
+## 12 · PROJECT QUICK-CONTEXT (read once, then refer back)
 
 ### High-level architecture
 
@@ -499,12 +733,32 @@ These **must stay in sync by value**. A change to one without the other ships a 
 5. Compliance badges are plain text rectangles.
 6. `framer-motion` is still in `package.json` (`^11.18.2`) but not imported on the `/` route — Phase 1.5 will either uninstall it or document an audited reintroduction.
 
+### Open WEB-TASK entries (canonical decision tracker pending §6 adoption)
+
+| Task | Description | Wave |
+|---|---|---|
+| `WEB-TASK-20260515-A` | Pick accent colour token (cyan family direction per §11 — exact hex TBD) | Pre-launch |
+| `WEB-TASK-20260515-B` | Pick body font family (editorial sans or serif direction per §11 — exact family TBD) | Pre-launch |
+| `WEB-TASK-20260515-C` | Pick mono font family for monospace-pulses brand element (per §11) | Pre-launch |
+| `WEB-TASK-20260515-D` | Adopt `.claude/MEMORY.md` (per §6) — currently reserved | When first cross-session resume point needed |
+| `WEB-TASK-20260515-E` | Author `docs/design-system.md` companion | Pre-launch |
+| `WEB-TASK-20260515-F` | Author `docs/runbooks/claude-launch.md` companion | Backlog |
+
 ### Reference paths
 
-- `README.md` — full project README, the authoritative narrative source for everything in this section
+- `README.md` — full project README, the authoritative narrative source
+- `package.json` — runtime + devDependency manifest (5-dep budget per §11.1)
+- `tailwind.config.ts` — design tokens (colour, type, spacing, shadow, breakpoint, motion)
+- `next.config.mjs` — Next.js + dev security headers
+- `public/_headers` — production security headers (Cloudflare)
+- `lib/content.ts` — marketing copy single source of truth
+- `components/ui/` — reusable primitives
+- `components/sections/` — page-level sections
+- `lighthouserc.json` — Lighthouse CI thresholds (≥95)
+- `playwright.config.ts` — cross-browser test profiles
 - `docs/superpowers/specs/` — architectural specs and amendment logs
 - `docs/superpowers/plans/` — implementation plans
-- `.claude/settings.json` — inverted-permission allowlist for this project
+- `.claude/settings.json` — inverted-permission allowlist
 
 ### Known security advisories (2026-05-14 snapshot — for owner triage, NOT auto-fix)
 
@@ -518,8 +772,99 @@ These **must stay in sync by value**. A change to one without the other ships a 
 - `glob 10.2.0–10.4.5` (high) — command injection via `-c/--cmd` flag, applies only to the glob *CLI* with user-provided shell args; library use unaffected. Comes in via `@next/eslint-plugin-next`.
 - `tmp <=0.2.3` (low/moderate) — arbitrary write via symlink, used by `@lhci/cli`'s `inquirer` prompts; only triggered in interactive lhci flows.
 
-**Owner action items**: triage at next monthly charter review (§8). Track upstream patches for `@lhci/cli` and `eslint-config-next` releases; revisit Next.js major upgrade as a deliberate Phase 2 sprint.
+**Owner action items**: triage at next monthly charter review (§9). Track upstream patches for `@lhci/cli` and `eslint-config-next` releases; revisit Next.js major upgrade as a deliberate Phase 2 sprint.
 
 ---
 
-*End of Charter v1.2 — JAG Cybersecurity Website Edition.*
+## Appendix A · Defect-Entry Schema
+
+Use this schema for §1.3 (FIX-OR-FILE) and §1.7 (tactical hotfix follow-up).
+
+```
+WEB-DEFECT-YYYYMMDD-NNN [Severity: Low/Med/High/Critical] OPEN
+Title:          <one-line description>
+File/Route:     <path:line OR route URL>
+Domain:         <visual / interaction / a11y / perf / SEO / responsive /
+                 brand / i18n / security / code-quality>
+Symptom:        <observable behaviour, screenshot link, axe rule ID, Lighthouse score>
+Evidence:       <single best command output, screenshot path, or test result>
+Root cause:     <SPECULATION until proven>
+Proposed fix:   <smallest viable correction; estimated diff size>
+Fix wave:       <Hotfix | Pre-launch | Design-debt | Backlog>
+Discipline:     <which of the 11 disciplines from §1.4>
+Owner:          <named individual>
+Deadline:       <date — required if Fix wave is Hotfix and §1.7(d) applies>
+```
+
+Until §6 MEMORY.md is live, defect entries are tracked in commit messages and (when volume warrants) a dedicated `docs/defects.md` ledger.
+
+---
+
+## Appendix B · Pre/Post-Install SHA Workflow (operational, macOS)
+
+```bash
+TS=$(date +%Y%m%d_%H%M%S)
+TAG="charter-vX.Y-install"
+PROJECT_ROOT="/Users/cavslee/Projects/JAG/01_website"
+CHARTER="${PROJECT_ROOT}/CLAUDE.md"
+BACKUP_DIR="${HOME}/claude-backups/jag-website/${TAG}-${TS}"
+MANIFEST_DIR="${HOME}/claude-backups/jag-website/manifests"
+
+cd "${PROJECT_ROOT}"
+
+# 1. L1 snapshot — git commit existing charter (if present and dirty).
+if [ -f "${CHARTER}" ]; then
+  git add CLAUDE.md && git commit -m "snapshot: pre_${TAG}" 2>/dev/null || true
+fi
+
+# 2. L2 filesystem backup (project convention + central archive).
+mkdir -p "${BACKUP_DIR}" "${MANIFEST_DIR}"
+if [ -f "${CHARTER}" ]; then
+  cp -p "${CHARTER}" "${CHARTER}.backup-${TS}"
+  cp -p "${CHARTER}" "${BACKUP_DIR}/CLAUDE.md.pre_${TAG}"
+fi
+
+# 3. Pre-install SHA manifest.
+[ -f "${CHARTER}" ] && shasum -a 256 "${CHARTER}" > "${MANIFEST_DIR}/sha256_pre_${TAG}_${TS}.manifest"
+
+# 4. Stage new charter at /tmp/CLAUDE.md.staged (frontmatter sha256_body placeholder = literal "<recomputed-on-install>").
+
+# 5. Install (user-owned project path; no sudo).
+cp /tmp/CLAUDE.md.staged "${CHARTER}"
+
+# 6. Compute post-install body SHA.
+FRONTMATTER_END=$(grep -n '^---' "${CHARTER}" | sed -n '2p' | cut -d: -f1)
+BODY_START=$((FRONTMATTER_END + 1))
+BODY_SHA=$(tail -n +${BODY_START} "${CHARTER}" | shasum -a 256 | awk '{print $1}')
+
+# 7. Patch frontmatter with real SHA, re-install.
+sed -i '' "s|^sha256_body:.*|sha256_body: ${BODY_SHA}|" /tmp/CLAUDE.md.staged
+cp /tmp/CLAUDE.md.staged "${CHARTER}"
+
+# 8. Post-install manifest.
+shasum -a 256 "${CHARTER}" > "${MANIFEST_DIR}/sha256_post_${TAG}_${TS}.manifest"
+
+# 9. Git commit the installed charter.
+git add CLAUDE.md && git commit -m "charter: install ${TAG} (body SHA ${BODY_SHA:0:12})"
+
+echo "✅ Charter install complete."
+echo "   Canonical path : ${CHARTER}"
+echo "   Body SHA       : ${BODY_SHA}"
+echo "   Backups        : ${BACKUP_DIR}/  and  ${CHARTER}.backup-${TS}"
+```
+
+*Note on `sed -i ''`*: macOS BSD `sed` requires the empty `''` after `-i`. The script above is macOS-correct.
+
+---
+
+## Changelog
+
+| Version | Date | Summary |
+|---|---|---|
+| 2.0 | 2026-05-15 | Structural §0 routing change (action classes Type-0/1/2; tiered FULL/ABBREVIATED coordination block). §1.5 ASK-BEFORE-ACTING enumerated triggers (7) replacing 95%-confidence rule, with destructive-verb scoped to action-naming use only. §1.3 FIX-OR-FILE replaces FIX-BUGS-ON-THE-SPOT. §1.7 hotfix escape valve with ≤30-day cap. §6 reserved for MEMORY.md (avoid over-engineering an artifact that doesn't exist). §8 generic-AI self-reject rule bounded to one rewrite then escalate. §9.2 harvest pattern formalised; §9.3 retirement procedure added. §11 expanded with reference brands, success metric, JAG-original anti-pattern list; PLANNED typography/colour decisions consolidated to single "Open decisions" pointer; canonical decision tracker is §12 only. §11.2 anti-pattern catalogue de-duplicated from §11. Appendix A defect schema. Appendix B SHA install workflow. Frontmatter `sha256_body` self-attestation. Trimmed from proposed v1.3 by removing companion-doc phantom references, tautological SHA verification step, unverified sister-charter reference, and fake-mechanical "keyword overlap" tiebreaker. |
+| 1.2 | 2026-05-15 | Motion-craft (§3.2.1, Emil Kowalski harvest) + anti-pattern catalogue (§10.2, Impeccable harvest). |
+| 1.0–1.1 | 2026-05-14 | Initial charter authoring; Phase 1.5 dev-tooling registry; project quick-context. |
+
+---
+
+*End of Charter v2.0 — JAG Cybersecurity Website Edition.*
