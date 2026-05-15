@@ -68,10 +68,10 @@ export default function Footer() {
           ))}
         </div>
         <div className="mt-16 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-t border-border-subtle pt-8">
-          <p className="text-xs text-text-quaternary">
+          <p className="text-xs text-text-tertiary">
             © 2026 JAG Cybersecurity Sdn Bhd · Penang, Malaysia · All rights reserved.
           </p>
-          <p className="text-xs text-text-quaternary flex items-center gap-3">
+          <p className="text-xs text-text-tertiary flex items-center gap-3">
             <Linkedin className="h-4 w-4" aria-hidden />
             Operations: Malaysia · Holdco: Singapore
           </p>

@@ -17,6 +17,7 @@ export default function Navigation() {
   const ticking = useRef(false);
   const hamburgerRef = useRef<HTMLButtonElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
+  const overlayRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const onScroll = () => {
@@ -62,6 +63,15 @@ export default function Navigation() {
       hamburgerRef.current?.focus();
     }
     didMountRef.current = true;
+  }, [open]);
+
+  // inert when closed — makes descendants unfocusable + invisible to AT,
+  // fixing WCAG 4.1.2 aria-hidden-focus on the off-screen overlay.
+  useEffect(() => {
+    const el = overlayRef.current;
+    if (!el) return;
+    if (open) el.removeAttribute('inert');
+    else el.setAttribute('inert', '');
   }, [open]);
 
   return (
@@ -110,6 +120,7 @@ export default function Navigation() {
       </div>
 
       <div
+        ref={overlayRef}
         className={`fixed inset-0 z-50 bg-bg-base transition-transform duration-base ease-standard md:hidden ${
           open ? 'translate-x-0' : 'translate-x-full'
         }`}

@@ -16,7 +16,10 @@ export function Hero() {
         }}
         aria-hidden="true"
       />
-      <div className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 opacity-30 animate-pulse-glow">
+      <div
+        className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 opacity-30 animate-pulse-glow"
+        style={{ animationDelay: '1200ms' }}
+      >
         <ShieldSVG animate size={560} />
       </div>
       <div className="relative mx-auto max-w-container text-center">

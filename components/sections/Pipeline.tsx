@@ -17,8 +17,9 @@ export function Pipeline() {
         </FadeInOnScroll>
         <FadeInOnScroll>
           <div
-            className="mt-12 overflow-x-auto"
+            className="mt-12 overflow-x-auto focus-visible:outline-none"
             role="img"
+            tabIndex={0}
             aria-label="Pipeline stages: Packet, Guardian, CPU LLM, GPU LLM, Action"
           >
             <div className="flex items-center gap-3 min-w-max px-2 py-4">
@@ -35,15 +36,15 @@ export function Pipeline() {
         </FadeInOnScroll>
         <ol className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-5">
           {PIPELINE.stages.map((s, i) => (
-            <FadeInOnScroll key={s.title} delay={i * 0.04}>
-              <li className="rounded-xl border border-border bg-bg-secondary p-6 h-full">
+            <li key={s.title}>
+              <FadeInOnScroll delay={i * 0.04} className="rounded-xl border border-border bg-bg-secondary p-6 h-full block">
                 <div className="font-mono text-xs text-accent mb-2">0{i + 1}</div>
                 <h3 className="font-display text-base font-bold text-text-primary mb-2">
                   {s.title}
                 </h3>
                 <p className="text-sm text-text-secondary leading-relaxed">{s.body}</p>
-              </li>
-            </FadeInOnScroll>
+              </FadeInOnScroll>
+            </li>
           ))}
         </ol>
       </Container>
