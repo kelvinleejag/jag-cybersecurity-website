@@ -84,6 +84,11 @@ const config: Config = {
       borderRadius: {
         pill: '999px',
       },
+      letterSpacing: {
+        eyebrow: '0.12em',
+        display: '-0.03em',
+        heading: '-0.02em',
+      },
       boxShadow: {
         'glow-sm': '0 0 24px rgba(34, 211, 238, 0.12)',
         'glow-md': '0 0 48px rgba(34, 211, 238, 0.20)',
