@@ -10,7 +10,8 @@ const BREAKPOINTS = [
 
 test.describe('visual regression baseline (Phase H)', () => {
   for (const bp of BREAKPOINTS) {
-    test(`home @ ${bp.name}px`, async ({ page }) => {
+    test(`home @ ${bp.name}px`, async ({ page }, testInfo) => {
+      test.skip(testInfo.project.name !== 'chromium', 'chromium-only baseline');
       await page.setViewportSize({ width: bp.width, height: bp.height });
       await page.goto('/');
       await page.waitForLoadState('networkidle');
