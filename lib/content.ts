@@ -249,3 +249,79 @@ export const hero = {
   ctaSecondary: { label: 'See How It Works', href: '#pipeline' },
   trust: ['NVIDIA Jetson Orin NX', 'Air-gap Capable', '6 Patents Pending', 'Sub-5-second Time-to-Block'],
 } as const;
+
+export const threatLandscape = {
+  eyebrow: 'THE NEW THREAT LANDSCAPE',
+  headline: 'The AI-fication of Cyber Threats Has Begun.',
+  lede:
+    'Autonomous AI agents are now writing exploits, conducting reconnaissance, and adapting attacks in real time. Legacy security stacks — designed for human-paced threats — cannot match machine-speed adversaries. The defenders need their own AI.',
+  cards: [
+    {
+      title: 'The Sovereignty Gap',
+      body:
+        'Cloud-dependent security tools ship sensitive data to vendor infrastructure outside your jurisdiction. For sovereign and regulated organizations, this is increasingly untenable.',
+      icon: 'ShieldOff',
+    },
+    {
+      title: 'The Legacy Stack',
+      body:
+        'Signature-based detection and static rules cannot keep up with AI-generated polymorphic attacks and novel multi-stage intrusions.',
+      icon: 'AlertTriangle',
+    },
+    {
+      title: 'The Skills Shortage',
+      body:
+        'There are not enough security analysts on Earth to investigate every alert. Autonomous response is no longer optional — it is operationally required.',
+      icon: 'Users',
+    },
+    {
+      title: 'The Attack Surface Explosion',
+      body:
+        'OT, IoT, SCADA, and edge devices have multiplied the entry points. Centralized cloud-based defense cannot reach the edge fast enough.',
+      icon: 'Network',
+    },
+  ],
+  closing: 'JAG was built for this new reality.',
+} as const;
+
+export const capabilities = {
+  eyebrow: 'INTRODUCING JAG',
+  headline: 'Cybersecurity That Thinks at the Edge.',
+  cards: [
+    {
+      title: 'Real-Time Threat Detection',
+      body:
+        'Wire-speed packet inspection paired with on-device AI classifiers. Threats are identified and scored in sub-second time, every time.',
+      icon: 'Activity',
+    },
+    {
+      title: 'Autonomous Response',
+      body:
+        'Block, quarantine, alert, or escalate — JAG decides and acts without waiting for a human. The human reviews; the system does not stall.',
+      icon: 'Zap',
+    },
+    {
+      title: 'AI Validation Watchdog',
+      body:
+        'A second AI keeps the first one honest. Hallucinations, prompt injections, and adversarial inputs are caught before any enforcement action fires.',
+      icon: 'Eye',
+    },
+    {
+      title: 'Sovereign by Design',
+      body:
+        'Every decision happens on the NVIDIA Jetson Orin NX. No cloud round-trips, no data exfiltration, no third-party visibility into your traffic.',
+      icon: 'Lock',
+    },
+  ],
+  proofBar: {
+    stats: [
+      { value: 10, suffix: '/10', label: 'Attack types blocked' },
+      { value: 5, suffix: ' sec', label: 'Time-to-block' },
+      { value: 0, suffix: '%', label: 'False positive rate' },
+      { value: 310, suffix: '/310', label: 'Unit tests passing' },
+      { value: 113, suffix: ' claims', label: 'Patent claims filed' },
+    ],
+    caption:
+      'Validated in controlled red-team exercise — April 2026. Patents filed with MyIPO under Solarz personal name, assignment to JAG Cybersecurity Sdn Bhd in Q3-Q4 2026.',
+  },
+} as const;

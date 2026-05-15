@@ -1,57 +1,48 @@
-import { Radar, Zap, Eye, Lock, type LucideIcon } from 'lucide-react';
-import { Container } from '@/components/ui/Container';
-import { Card } from '@/components/ui/Card';
-import { SectionHeader } from '@/components/ui/SectionHeader';
 import { FadeInOnScroll } from '@/components/ui/FadeInOnScroll';
-import { MetricCounter } from '@/components/ui/MetricCounter';
-import { SOLUTION } from '@/lib/content';
+import { ProofBar } from '@/components/ui/ProofBar';
+import { capabilities } from '@/lib/content';
+import { Activity, Zap, Eye, Lock, type LucideIcon } from 'lucide-react';
 
-const ICONS: Record<string, LucideIcon> = { Radar, Zap, Eye, Lock };
+const ICONS: Record<string, LucideIcon> = { Activity, Zap, Eye, Lock };
 
 export function Solution() {
   return (
-    <section id="solution" className="section-padding-y bg-bg-secondary/30">
-      <Container>
-        <FadeInOnScroll>
-          <SectionHeader
-            eyebrow="Introducing JAG"
-            title={SOLUTION.header}
-            lead={SOLUTION.lead}
-          />
-        </FadeInOnScroll>
-        <div className="mt-16 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-          {SOLUTION.capabilities.map((cap, i) => {
-            const Icon = ICONS[cap.icon];
-            return (
-              <FadeInOnScroll key={cap.title} delay={i * 0.05}>
-                <Card className="h-full">
-                  {Icon && (
-                    <div className="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-md bg-accent/10 text-accent">
-                      <Icon size={20} />
-                    </div>
-                  )}
-                  <h3 className="font-display text-lg font-bold text-text-primary mb-2">
-                    {cap.title}
-                  </h3>
-                  <p className="text-sm text-text-secondary leading-relaxed">{cap.body}</p>
-                </Card>
-              </FadeInOnScroll>
-            );
-          })}
-        </div>
-        <FadeInOnScroll>
-          <div className="mt-20 rounded-xl border border-border bg-bg-secondary p-8 md:p-10">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-              {SOLUTION.metrics.map((m) => (
-                <MetricCounter key={m.label} value={m.value} label={m.label} />
-              ))}
-            </div>
-            <p className="mt-8 text-center text-xs text-text-tertiary">
-              {SOLUTION.metricsCaption}
+    <>
+      <section id="solution" className="bg-bg-base py-section">
+        <div className="mx-auto max-w-container px-gutter">
+          <FadeInOnScroll>
+            <p className="font-mono text-eyebrow uppercase tracking-eyebrow text-brand-cyan">
+              {capabilities.eyebrow}
             </p>
+          </FadeInOnScroll>
+          <FadeInOnScroll delay={0.15}>
+            <h2 className="mt-3 font-display text-h2 font-semibold text-text-primary leading-heading tracking-heading max-w-[24ch] text-balance">
+              {capabilities.headline}
+            </h2>
+          </FadeInOnScroll>
+          <div className="mt-16 grid grid-cols-1 md:grid-cols-2 gap-6">
+            {capabilities.cards.map((c, i) => {
+              const Icon = ICONS[c.icon];
+              return (
+                <FadeInOnScroll key={c.title} delay={0.1 * i}>
+                  <article className="group relative rounded-lg bg-bg-surface border border-border-default p-8 transition-all duration-base ease-standard hover:-translate-y-1 hover:border-border-strong hover:shadow-cardHover overflow-hidden h-full">
+                    <span
+                      className="absolute left-0 top-0 h-px w-0 bg-gradient-to-r from-brand-cyan to-transparent transition-all duration-base ease-standard group-hover:w-full"
+                      aria-hidden="true"
+                    />
+                    <Icon className="h-9 w-9 text-brand-cyan" aria-hidden="true" />
+                    <h3 className="mt-6 font-display text-h3 font-semibold text-text-primary leading-heading tracking-heading">
+                      {c.title}
+                    </h3>
+                    <p className="mt-3 text-body text-text-secondary leading-body">{c.body}</p>
+                  </article>
+                </FadeInOnScroll>
+              );
+            })}
           </div>
-        </FadeInOnScroll>
-      </Container>
-    </section>
+        </div>
+      </section>
+      <ProofBar />
+    </>
   );
 }
