@@ -41,24 +41,17 @@ export function MetricCounter({
   labelClassName?: string;
 }) {
   const ref = useRef<HTMLDivElement>(null);
-  const hasAnimated = useRef(false);
   const parsed = useMemo(() => parseNumeric(value), [value]);
   const [display, setDisplay] = useState(
     parsed ? `${parsed.prefix}0${parsed.suffix}` : value
   );
 
   useEffect(() => {
-    if (hasAnimated.current) return;
-
     // Non-numeric value (defensive): no animation possible.
-    if (!parsed) {
-      hasAnimated.current = true;
-      return;
-    }
+    if (!parsed) return;
 
     // prefers-reduced-motion: skip the count-up entirely, snap to final value.
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      hasAnimated.current = true;
       setDisplay(value);
       return;
     }
@@ -66,13 +59,12 @@ export function MetricCounter({
     const element = ref.current;
     if (!element) return;
 
-    let observer: IntersectionObserver | null = null;
-    let fallbackTimer: ReturnType<typeof setTimeout> | null = null;
     let frame = 0;
+    let started = false;
 
-    // Existing count-up logic — preserved byte-for-byte from the prior
-    // useEffect body (only the wrapping conditions changed).
     const animateCount = () => {
+      if (started) return;
+      started = true;
       const duration = 1200;
       const start = performance.now();
       const tick = (now: number) => {
@@ -88,32 +80,21 @@ export function MetricCounter({
       frame = requestAnimationFrame(tick);
     };
 
-    // Race: observer OR fallback timer — whichever fires first wins,
-    // the other is canceled to prevent double-triggering.
-    const triggerAnimation = () => {
-      if (hasAnimated.current) return;
-      hasAnimated.current = true;
-      if (observer) observer.disconnect();
-      if (fallbackTimer) clearTimeout(fallbackTimer);
-      animateCount();
-    };
-
-    // Signal source 1: scroll into view (≥30% of element visible).
-    observer = new IntersectionObserver(
+    // Observer triggers when element scrolls into view.
+    const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) triggerAnimation();
+        if (entry.isIntersecting) animateCount();
       },
-      { threshold: 0.3 }
+      { threshold: 0.3 },
     );
     observer.observe(element);
 
-    // Signal source 2: 1.5 s fallback if IntersectionObserver never fires
-    // (the bug class we just fixed for FadeInOnScroll). Belt-and-braces.
-    fallbackTimer = setTimeout(triggerAnimation, 1500);
+    // 1.5 s fallback in case observer never fires (hidden tab, SSR edge case).
+    const fallbackTimer = setTimeout(animateCount, 1500);
 
     return () => {
-      if (observer) observer.disconnect();
-      if (fallbackTimer) clearTimeout(fallbackTimer);
+      observer.disconnect();
+      clearTimeout(fallbackTimer);
       if (frame) cancelAnimationFrame(frame);
     };
   }, [parsed, value]);

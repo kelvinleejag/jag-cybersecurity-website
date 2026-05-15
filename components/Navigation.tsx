@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 const NAV_LINKS = [
   { href: '#solution', label: 'Solution' },
@@ -82,9 +83,15 @@ export default function Navigation() {
     >
       <div className="border-b border-border-default backdrop-blur-md bg-bg-base/80">
         <nav className="mx-auto flex max-w-container items-center justify-between px-gutter py-4">
-          <Link href="/" className="font-display text-xl font-semibold tracking-tight">
-            <span className="text-text-primary">JAG</span>
-            <span className="text-brand-cyan">.</span>
+          <Link href="/" aria-label="JAG Cybersecurity — home" className="flex items-center">
+            <Image
+              src="/assets/jag-logo.png"
+              alt="JAG Cybersecurity"
+              width={44}
+              height={48}
+              priority
+              className="h-10 w-auto"
+            />
           </Link>
           <ul className="hidden md:flex items-center gap-8">
             {NAV_LINKS.map((l) => (
@@ -127,10 +134,13 @@ export default function Navigation() {
         aria-hidden={!open}
       >
         <div className="flex items-center justify-between px-gutter py-4 border-b border-border-default">
-          <span className="font-display text-xl font-semibold">
-            <span className="text-text-primary">JAG</span>
-            <span className="text-brand-cyan">.</span>
-          </span>
+          <Image
+            src="/assets/jag-logo.png"
+            alt="JAG Cybersecurity"
+            width={44}
+            height={48}
+            className="h-10 w-auto"
+          />
           <button
             ref={closeRef}
             type="button"

@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Linkedin } from 'lucide-react';
+import Image from 'next/image';
 
 const COLS = [
   {
@@ -41,11 +41,16 @@ export default function Footer() {
       <div className="mx-auto max-w-container px-gutter py-16">
         <div className="grid grid-cols-1 gap-12 md:grid-cols-5">
           <div className="md:col-span-1">
-            <Link href="/" className="font-display text-2xl font-semibold tracking-tight">
-              <span className="text-text-primary">JAG</span>
-              <span className="text-brand-cyan">.</span>
+            <Link href="/" aria-label="JAG Cybersecurity — home" className="inline-flex items-center">
+              <Image
+                src="/assets/jag-logo.png"
+                alt="JAG Cybersecurity"
+                width={56}
+                height={61}
+                className="h-14 w-auto"
+              />
             </Link>
-            <p className="mt-3 text-sm text-text-tertiary max-w-[28ch]">
+            <p className="mt-4 text-sm text-text-tertiary max-w-[28ch]">
               Sovereign Agentic AI cybersecurity. Zero cloud. Zero exfiltration. Zero trust.
             </p>
           </div>
@@ -67,14 +72,8 @@ export default function Footer() {
             </div>
           ))}
         </div>
-        <div className="mt-16 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-t border-border-subtle pt-8">
-          <p className="text-xs text-text-tertiary">
-            © 2026 JAG Cybersecurity Sdn Bhd · Penang, Malaysia · All rights reserved.
-          </p>
-          <p className="text-xs text-text-tertiary flex items-center gap-3">
-            <Linkedin className="h-4 w-4" aria-hidden />
-            Operations: Malaysia · Holdco: Singapore
-          </p>
+        <div className="mt-16 border-t border-border-subtle pt-8">
+          <p className="text-xs text-text-tertiary">© 2026 JAGuardian</p>
         </div>
       </div>
     </footer>
