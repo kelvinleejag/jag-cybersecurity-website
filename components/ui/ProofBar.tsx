@@ -25,7 +25,12 @@ export function ProofBar() {
         <ul className="grid grid-cols-2 md:grid-cols-5 gap-8">
           {stats.map((s) => (
             <li key={s.label}>
-              <MetricCounter value={`${s.value}${s.suffix}`} label={s.label} />
+              <MetricCounter
+                value={`${s.value}${s.suffix}`}
+                label={s.label}
+                numberClassName="font-mono text-h2 font-semibold text-brand-cyan tabular-nums animate-fade-in-up"
+                labelClassName="mt-2 font-mono text-xs uppercase tracking-eyebrow text-text-tertiary"
+              />
             </li>
           ))}
         </ul>

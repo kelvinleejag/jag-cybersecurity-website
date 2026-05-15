@@ -29,7 +29,17 @@ function parseNumeric(value: string): { num: number; suffix: string; prefix: str
   return { prefix: match[1], num: parseFloat(match[2]), suffix: match[3] };
 }
 
-export function MetricCounter({ value, label }: { value: string; label: string }) {
+export function MetricCounter({
+  value,
+  label,
+  numberClassName = 'font-mono text-4xl md:text-5xl font-medium text-accent tabular-nums animate-fade-in-up',
+  labelClassName = 'mt-3 text-sm text-text-secondary leading-snug',
+}: {
+  value: string;
+  label: string;
+  numberClassName?: string;
+  labelClassName?: string;
+}) {
   const ref = useRef<HTMLDivElement>(null);
   const hasAnimated = useRef(false);
   const parsed = useMemo(() => parseNumeric(value), [value]);
@@ -110,10 +120,8 @@ export function MetricCounter({ value, label }: { value: string; label: string }
 
   return (
     <div ref={ref} className="text-center">
-      <div className="font-mono text-4xl md:text-5xl font-medium text-accent tabular-nums animate-fade-in-up">
-        {display}
-      </div>
-      <p className="mt-3 text-sm text-text-secondary leading-snug">{label}</p>
+      <div className={numberClassName}>{display}</div>
+      <p className={labelClassName}>{label}</p>
     </div>
   );
 }
