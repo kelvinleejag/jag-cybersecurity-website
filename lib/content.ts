@@ -392,3 +392,97 @@ export const architecture = {
   caption:
     'All inference, validation, and enforcement happens on the device. Zero cloud round-trips. Zero data exfiltration.',
 } as const;
+
+export const fiveLayers = {
+  eyebrow: 'THE FIVE LAYERS',
+  headline: 'Five Patented Inventions. One Unified Ecosystem.',
+  lede:
+    "JAG isn't a single tool — it's five integrated defense layers, each a patented invention, working together inside one sovereign device.",
+  layers: [
+    {
+      step: '01',
+      title: 'Enforce',
+      subtitle: 'The Front Gate',
+      body:
+        'Kernel-level packet inspection paired with iptables/ipset enforcement at line rate. Known signatures and protocol violations are dropped before any AI tier sees them. The cheapest decision is the one made first.',
+      quote:
+        'Stops the obvious bad guys at the door — so the rest of the system never has to deal with them.',
+    },
+    {
+      step: '02',
+      title: 'Understand',
+      subtitle: 'The On-Device Brain',
+      body:
+        'A cybersecurity-specialized LLM (Foundation-Sec-8B class) runs on the Jetson Orin NX GPU. It reasons about novel attack patterns, multi-stage intrusions, and social engineering — and emits a human-readable explanation alongside every decision.',
+      quote:
+        'A specialist AI that figures out what the attacker is up to — and explains it in words humans can read.',
+    },
+    {
+      step: '03',
+      title: 'Prove',
+      subtitle: 'The Tamper-Proof Logbook',
+      body:
+        'Every decision, every enforcement action, every model output is sealed into a cryptographic evidence bundle and written to a tamper-evident ledger. Auditors and regulators get a chain of custody that holds up under scrutiny.',
+      quote:
+        'An unbreakable record of every decision — auditors, regulators, and courts can trust it.',
+    },
+    {
+      step: '04',
+      title: 'Guard the AI',
+      subtitle: 'The AI That Watches the AI',
+      body:
+        'A second validation model runs adversarial checks against the primary AI: hallucination detection, prompt-injection probes, output-grounding verification. If the validator disagrees, no enforcement fires. The AI is never alone with the gun.',
+      quote:
+        'A second AI keeps the first one honest — so a tricked or hallucinating AI never gets to take action.',
+    },
+    {
+      step: '05',
+      title: 'Adapt',
+      subtitle: 'The Self-Improving Loop',
+      body:
+        'Every attack JAG sees becomes training signal for the on-device classifier. Updates are staged, validated against the proof ledger, and reviewed by a human operator before they go live. The system learns; the human approves.',
+      quote:
+        'JAG gets smarter with every attack it sees — but a human always has the final say before anything goes live.',
+    },
+  ],
+  closing: {
+    title: 'A Defensible Moat by Design',
+    body:
+      'Protected under a portfolio of 6 patents · 113 claims · filed with MyIPO. The integrated architecture cannot be replicated without infringing.',
+  },
+} as const;
+
+export const standards = {
+  eyebrow: 'STANDARDS-ALIGNED. AUDIT-READY.',
+  headline: 'Mapped to the Frameworks Your Auditors Already Use.',
+  lede:
+    'Every JAG decision, log, and enforcement action is designed to satisfy global cybersecurity, AI governance, and data protection standards.',
+  frameworks: [
+    'NIST CSF 2.0',
+    'ISO 27001:2022',
+    'SOC 2 Type II',
+    'OWASP Top 10 + LLM Top 10',
+    'CWE / CAPEC',
+    'GDPR Art. 44-49',
+    'PDPA (Malaysia)',
+    'EU AI Act',
+    'ISA 18.2',
+    'IEC 62443',
+    'NIST AI RMF 1.0',
+  ],
+  caption:
+    'JAG is designed to align with leading global cybersecurity, AI governance, and data protection standards. Formal certifications in roadmap.',
+} as const;
+
+export const markets = {
+  eyebrow: 'WHO WE SERVE',
+  headline: 'Built for Sovereign and Data-Sensitive Organizations.',
+  segments: [
+    { icon: 'Banknote', title: 'Banking & Financial Services', body: 'Real-time fraud detection and insider threat defense without cloud data exposure.' },
+    { icon: 'Radio', title: 'Telecommunications', body: 'Protect core network infrastructure and subscriber data at edge speed.' },
+    { icon: 'Zap', title: 'Critical Infrastructure', body: 'Energy grids, water utilities, transportation systems — where downtime is not an option.' },
+    { icon: 'Landmark', title: 'Government & Sovereign Agencies', body: 'National security-grade AI defense that never sends data offshore.' },
+    { icon: 'HeartPulse', title: 'Healthcare & Research', body: 'Protect patient data and research IP with compliance-ready sovereign architecture.' },
+    { icon: 'Factory', title: 'Enterprise & Industrial IoT', body: 'Secure the expanding edge — OT networks, IoT fleets, distributed operations.' },
+  ],
+} as const;
