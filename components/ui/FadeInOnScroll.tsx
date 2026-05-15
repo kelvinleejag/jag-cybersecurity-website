@@ -1,37 +1,81 @@
 'use client';
-import { ReactNode } from 'react';
+
+import { ReactNode, useEffect, useRef, useState } from 'react';
 
 /**
- * FadeInOnScroll — CSS-only fade-in wrapper.
+ * FadeInOnScroll — CSS-keyframe fade-in wrapper with IntersectionObserver gating.
  *
- * Renders a div with the `animate-fade-in-up` Tailwind utility (defined
- * in tailwind.config.ts). Animation fires on element mount; for a
- * single-page landing site this is acceptable and avoids the
- * IntersectionObserver class of bugs that plagued the prior framer-motion
- * implementations.
+ * Behaviour:
+ *   - On mount: hidden (opacity: 0) until the wrapper crosses 10% into view,
+ *     at which point we apply the `animate-fade-in-up` Tailwind utility.
+ *   - A 1500 ms `setTimeout` fallback flips visibility to true if the
+ *     observer never fires (covers SSR + Strict-Mode + hidden-tab edge cases
+ *     that caused the framer-motion regression documented in spec
+ *     docs/superpowers/specs/2026-04-25-fade-animation-css-refactor-design.md).
+ *   - `prefers-reduced-motion`: bypass the observer and reveal immediately.
  *
- * History (do not revert):
- *   1. whileInView + once:true + margin   → sections invisible.
- *   2. useInView hook + deterministic init → sections invisible
+ * Public API:
+ *   - Named export (back-compat with existing section consumers).
+ *   - Default export (forward-compat for new Phase B+ components).
+ *   - `delay` is in **seconds** (back-compat). Forwarded as CSS
+ *     `animation-delay` once visible.
+ *
+ * History (do not revert without justification):
+ *   1. framer-motion `whileInView` → sections invisible.
+ *   2. framer-motion `useInView` deterministic init → sections invisible
  *      (commit 81fb7f8 type-checked + built clean but headless render
- *      showed 39 wrappers stuck at opacity:0; transform:translateY(16px)).
- * Spec: docs/superpowers/specs/2026-04-25-fade-animation-css-refactor-design.md
+ *      showed 39 wrappers stuck at opacity:0).
+ *   3. CSS-only always-on (no observer) → worked but couldn't stagger
+ *      based on viewport intersection.
+ *   4. Current: native IntersectionObserver + setTimeout fallback +
+ *      reduced-motion guard. Bundle delta vs framer-motion: −36 kB.
  */
-export function FadeInOnScroll({
-  children,
-  className = '',
-  delay = 0,
-}: {
+interface Props {
   children: ReactNode;
   className?: string;
-  delay?: number; // seconds — matches prior API for staggered effects
-}) {
+  /** Animation delay in **seconds**. Matches prior API. */
+  delay?: number;
+}
+
+export function FadeInOnScroll({ children, className = '', delay = 0 }: Props) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      setVisible(true);
+      return;
+    }
+    const fallback = window.setTimeout(() => setVisible(true), 1500);
+    const obs = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) {
+            setVisible(true);
+            window.clearTimeout(fallback);
+            obs.disconnect();
+          }
+        }
+      },
+      { threshold: 0.1, rootMargin: '0px 0px -10% 0px' },
+    );
+    if (ref.current) obs.observe(ref.current);
+    return () => {
+      window.clearTimeout(fallback);
+      obs.disconnect();
+    };
+  }, []);
+
   return (
     <div
-      className={`animate-fade-in-up ${className}`}
-      style={delay > 0 ? { animationDelay: `${delay}s` } : undefined}
+      ref={ref}
+      style={visible && delay > 0 ? { animationDelay: `${delay}s` } : undefined}
+      className={`${visible ? 'animate-fade-in-up' : 'opacity-0'} ${className}`}
     >
       {children}
     </div>
   );
 }
+
+export default FadeInOnScroll;

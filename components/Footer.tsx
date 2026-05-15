@@ -1,68 +1,82 @@
-import { Linkedin, Mail, MapPin } from 'lucide-react';
-import { Container } from '@/components/ui/Container';
-import { FOOTER } from '@/lib/content';
+import Link from 'next/link';
+import { Linkedin } from 'lucide-react';
 
-export function Footer() {
+const COLS = [
+  {
+    title: 'Solution',
+    links: [
+      { href: '#threats', label: 'Threat Landscape' },
+      { href: '#solution', label: 'Capabilities' },
+      { href: '#five-layers', label: 'Five Layers' },
+    ],
+  },
+  {
+    title: 'Technology',
+    links: [
+      { href: '#pipeline', label: 'Pipeline' },
+      { href: '#architecture', label: 'Architecture' },
+      { href: '#technology', label: 'Standards' },
+    ],
+  },
+  {
+    title: 'Markets',
+    links: [
+      { href: '#markets', label: 'Who We Serve' },
+      { href: '#founder', label: 'Founder' },
+    ],
+  },
+  {
+    title: 'Contact',
+    links: [
+      { href: 'mailto:connect@jag-cybersecurity.io', label: 'connect@' },
+      { href: 'mailto:kelvin@jag-cybersecurity.io', label: 'kelvin@' },
+      { href: '#contact', label: 'Demo Request' },
+    ],
+  },
+];
+
+export default function Footer() {
   return (
-    <footer className="bg-bg-deep border-t border-border mt-12">
-      <Container className="py-16">
-        <div className="grid gap-12 md:grid-cols-3">
-          <div>
-            <div className="font-display font-bold text-xl text-text-primary tracking-tight">
-              JAG<span className="text-accent">.</span>
-            </div>
-            <p className="mt-4 text-sm text-text-secondary leading-relaxed max-w-sm">
-              {FOOTER.tagline}
+    <footer className="border-t border-border-default bg-bg-surfaceMuted">
+      <div className="mx-auto max-w-container px-gutter py-16">
+        <div className="grid grid-cols-1 gap-12 md:grid-cols-5">
+          <div className="md:col-span-1">
+            <Link href="/" className="font-display text-2xl font-semibold tracking-tight">
+              <span className="text-text-primary">JAG</span>
+              <span className="text-brand-cyan">.</span>
+            </Link>
+            <p className="mt-3 text-sm text-text-tertiary max-w-[28ch]">
+              Sovereign Agentic AI cybersecurity. Zero cloud. Zero exfiltration. Zero trust.
             </p>
           </div>
-          <div>
-            <h3 className="font-mono text-xs uppercase tracking-widest text-text-tertiary mb-4">
-              Navigation
-            </h3>
-            <ul className="space-y-2">
-              {FOOTER.navLinks.map((link) => (
-                <li key={link.href}>
-                  <a
-                    href={link.href}
-                    className="text-sm text-text-secondary hover:text-accent transition-colors"
-                  >
-                    {link.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div>
-            <h3 className="font-mono text-xs uppercase tracking-widest text-text-tertiary mb-4">
-              Connect
-            </h3>
-            <ul className="space-y-3 text-sm text-text-secondary">
-              <li>
-                <a
-                  href={FOOTER.linkedinHref}
-                  className="inline-flex items-center gap-2 hover:text-accent transition-colors"
-                  aria-label="LinkedIn"
-                >
-                  <Linkedin size={16} /> LinkedIn
-                </a>
-              </li>
-              <li className="inline-flex items-center gap-2">
-                <Mail size={16} className="text-text-tertiary" />
-                <a href={`mailto:${FOOTER.general}`} className="hover:text-accent transition-colors">
-                  {FOOTER.general}
-                </a>
-              </li>
-              <li className="inline-flex items-center gap-2">
-                <MapPin size={16} className="text-text-tertiary" /> {FOOTER.location}
-              </li>
-            </ul>
-          </div>
+          {COLS.map((col) => (
+            <div key={col.title}>
+              <h3 className="font-mono text-xs uppercase tracking-eyebrow text-brand-cyan">{col.title}</h3>
+              <ul className="mt-4 space-y-2">
+                {col.links.map((l) => (
+                  <li key={l.href}>
+                    <a
+                      href={l.href}
+                      className="text-sm text-text-secondary hover:text-text-primary transition-colors duration-fast"
+                    >
+                      {l.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
         </div>
-        <div className="mt-12 pt-6 border-t border-border flex flex-col md:flex-row md:items-center md:justify-between gap-2 text-xs text-text-tertiary">
-          <p>{FOOTER.copyright}</p>
-          <p>{FOOTER.patentNote}</p>
+        <div className="mt-16 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-t border-border-subtle pt-8">
+          <p className="text-xs text-text-quaternary">
+            © 2026 JAG Cybersecurity Sdn Bhd · Penang, Malaysia · All rights reserved.
+          </p>
+          <p className="text-xs text-text-quaternary flex items-center gap-3">
+            <Linkedin className="h-4 w-4" aria-hidden />
+            Operations: Malaysia · Holdco: Singapore
+          </p>
         </div>
-      </Container>
+      </div>
     </footer>
   );
 }

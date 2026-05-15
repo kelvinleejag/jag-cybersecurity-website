@@ -3,34 +3,26 @@
 @tailwind utilities;
 
 :root {
-  --section-padding: clamp(4rem, 8vw, 8rem);
+  color-scheme: dark;
 }
 
-@layer base {
-  html {
-    scroll-behavior: smooth;
-  }
-  body {
-    @apply bg-bg-primary text-text-primary font-sans antialiased;
-  }
-  *:focus-visible {
-    @apply outline-none ring-2 ring-accent ring-offset-2 ring-offset-bg-primary;
-  }
+html {
+  scroll-behavior: smooth;
 }
 
-@layer utilities {
-  .section-padding-y {
-    padding-top: var(--section-padding);
-    padding-bottom: var(--section-padding);
-  }
-  .text-balance {
-    text-wrap: balance;
-  }
+body {
+  font-family: var(--font-body), system-ui, sans-serif;
+  background: #05080F;
+  color: #F8FAFC;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .animate-fade-in-up {
+  *,
+  *::before,
+  *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }
