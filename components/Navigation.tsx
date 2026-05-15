@@ -15,6 +15,8 @@ export default function Navigation() {
   const [open, setOpen] = useState(false);
   const lastY = useRef(0);
   const ticking = useRef(false);
+  const hamburgerRef = useRef<HTMLButtonElement>(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     const onScroll = () => {
@@ -31,6 +33,36 @@ export default function Navigation() {
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
+
+  // Esc-to-close for mobile overlay.
+  useEffect(() => {
+    if (!open) return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setOpen(false);
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [open]);
+
+  // Body scroll lock while overlay open. Cleanup ensures class removed on unmount.
+  useEffect(() => {
+    document.body.classList.toggle('overflow-hidden', open);
+    return () => {
+      document.body.classList.remove('overflow-hidden');
+    };
+  }, [open]);
+
+  // Focus management: on open → close button; on close → hamburger.
+  // Skip the initial-mount close branch so we don't yank focus on first render.
+  const didMountRef = useRef(false);
+  useEffect(() => {
+    if (open) {
+      closeRef.current?.focus();
+    } else if (didMountRef.current) {
+      hamburgerRef.current?.focus();
+    }
+    didMountRef.current = true;
+  }, [open]);
 
   return (
     <header
@@ -63,6 +95,7 @@ export default function Navigation() {
             Request Demo
           </a>
           <button
+            ref={hamburgerRef}
             type="button"
             aria-label="Open menu"
             aria-expanded={open}
@@ -88,6 +121,7 @@ export default function Navigation() {
             <span className="text-brand-cyan">.</span>
           </span>
           <button
+            ref={closeRef}
             type="button"
             aria-label="Close menu"
             className="text-text-primary active:scale-[0.97] transition-transform duration-fast"

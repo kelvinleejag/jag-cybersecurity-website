@@ -238,3 +238,14 @@ export const FOOTER = {
   location: 'Penang, Malaysia',
   linkedinHref: '#',
 } as const;
+
+export const hero = {
+  eyebrow: 'SOVEREIGN AGENTIC AI · APRIL 2026',
+  headlineLine1: 'Agentic AI Cybersecurity.',
+  headlineLine2: 'Runs Entirely On-Device.',
+  subhead:
+    "JAG is the world's first standalone Agentic AI cybersecurity platform for sovereign and data-sensitive organizations. Every component — threat detection, decision-making, autonomous response, AI validation — runs entirely on the NVIDIA Jetson edge AI platform. No cloud calls. No data exfiltration. No compromise.",
+  ctaPrimary: { label: 'Request a Demo', href: '#contact' },
+  ctaSecondary: { label: 'See How It Works', href: '#pipeline' },
+  trust: ['NVIDIA Jetson Orin NX', 'Air-gap Capable', '6 Patents Pending', 'Sub-5-second Time-to-Block'],
+} as const;
