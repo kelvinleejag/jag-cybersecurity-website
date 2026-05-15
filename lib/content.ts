@@ -376,3 +376,19 @@ export const pipeline = {
   caption:
     'Most threats are stopped at the gate (01-02). Only the suspicious reach Quick Think (03). Only the trickiest reach Deep Think (04). The right amount of brainpower for every threat.',
 } as const;
+
+export const architecture = {
+  eyebrow: 'ARCHITECTURE',
+  headline: 'One Sovereign Device. Five Defense Layers.',
+  lede:
+    'JAG sits inline between the untrusted internet and your protected network. Every packet is inspected, classified, and either blocked at the edge or escalated to deeper inference — all on a single NVIDIA Jetson Orin NX.',
+  destinations: [
+    { icon: 'Monitor', label: 'Workstations' },
+    { icon: 'Server', label: 'Servers & IoT' },
+    { icon: 'Camera', label: 'IP Surveillance' },
+    { icon: 'Factory', label: 'Industrial / SCADA / PLC' },
+  ],
+  jetsonLayers: ['Edge AI Processing', 'Adaptive Threat Management', 'Intelligent Gateway'],
+  caption:
+    'All inference, validation, and enforcement happens on the device. Zero cloud round-trips. Zero data exfiltration.',
+} as const;
