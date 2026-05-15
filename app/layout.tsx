@@ -1,18 +1,9 @@
 import type { Metadata } from 'next';
-// NOTE: `Geist` is not exported by next/font/google in next@14.2.x.
-// `Inter` (same design lineage — Vercel) is the closest taste substitute and
-// satisfies WEB-TASK-20260515-B (body-font decision deferred). Phase A
-// deviation, logged in Phase A report.
-import { Inter, JetBrains_Mono } from 'next/font/google';
+import { GeistSans } from 'geist/font/sans';
+import { JetBrains_Mono } from 'next/font/google';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import './globals.css';
-
-const geist = Inter({
-  subsets: ['latin'],
-  variable: '--font-body',
-  display: 'swap',
-});
 
 const jetbrainsMono = JetBrains_Mono({
   subsets: ['latin'],
@@ -48,7 +39,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${geist.variable} ${jetbrainsMono.variable}`}>
+    <html lang="en" className={`${GeistSans.variable} ${jetbrainsMono.variable}`}>
       <body className="bg-bg-base text-text-primary antialiased">
         <Navigation />
         <main>{children}</main>

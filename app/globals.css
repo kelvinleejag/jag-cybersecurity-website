@@ -4,6 +4,7 @@
 
 :root {
   color-scheme: dark;
+  --font-body: var(--font-geist-sans);
 }
 
 html {
