@@ -5,16 +5,16 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ---
 doc_id: CLAUDE-CODE-CHARTER-JAG-WEBSITE
 title: Claude Code Operating Charter — World-Class Web Design Edition
-version: 2.0
+version: 2.1
 status: ACTIVE
 owner: Kelvin Lee
 effective_date: 2026-05-15
-last_amended: 2026-05-15 (v2.0 — structural §0 routing change; trimmed from proposed v1.3)
-supersedes: v1.2 (2026-05-15 motion-craft + anti-pattern harvest)
+last_amended: 2026-05-15 (v2.1 — website rebuild Phase 2 landed; closes WEB-TASK-A/B/C and Phase 1.5 gaps #1-#6)
+supersedes: v2.0 (2026-05-15 structural §0 routing change)
 project: JAG Cybersecurity — Marketing Website (Phase 1)
 project_root: /Users/cavslee/Projects/JAG/01_website
 canonical_path: ./CLAUDE.md
-sha256_body: 4ea6f1937f9066548cd38febde6c6071ffcf43d05bccc385cd2c958c17cb5b3f
+sha256_body: 36946f3f4bae5529da44deb15c23a242b410f74044f2d729e776454dabe952eb
 sha256_canonical_cmd: tail -n +<frontmatter_end_line+1> ./CLAUDE.md | shasum -a 256
 review_cadence: monthly OR upon any LESSON-LEARNED addition
 host: MacBook Air (Apple Silicon) — cavslee@Kelvins-MacBook-Air
@@ -309,7 +309,7 @@ A response is not complete unless these are satisfied for the work in scope.
 
 ### 3.4 Performance Budgets
 - LCP <2.5s · INP <200ms · CLS <0.1 on mid-tier mobile (4G throttle)
-- **Project baseline (do not regress):** First Load JS for `/` is 91.7 kB; page-specific JS is 4.32 kB. Any change pushing First Load JS above 100 kB requires written justification.
+- **Project baseline (do not regress):** First Load JS for `/` is 96.9 kB; page-specific JS is 4.4 kB (post-rebuild Phase 2 baseline). Any change pushing First Load JS above 100 kB requires written justification.
 - Initial JS bundle <170 kB gzipped per route (project current is well under)
 - **JAG-specific Lighthouse SLA: Performance / A11y / Best-Practices / SEO ≥95** — enforced by `@lhci/cli` (`lighthouserc.json`). Lighthouse Performance <95 is a §8 hard-stop for production deploy.
 - Image strategy: responsive `srcset`, modern formats (AVIF/WebP), lazy below fold. Note `next.config.mjs` sets `images: { unoptimized: true }` because of static export — handle responsiveness manually.
@@ -644,10 +644,15 @@ JAG-original anti-patterns: (explicitly forbidden — see §11.2 for harvested c
                  - More than one body font family
                  - More than one accent colour
 
-Open decisions : Typography (body + mono families) and exact accent colour token are
-                 not yet decided. Tracked in §12 as WEB-TASK-20260515-A (accent),
-                 -B (body font), -C (mono font). Until decided, do not introduce new
-                 hex/rgb/font-family literals — work within existing tokens.
+Open decisions : RESOLVED in v2.1.
+                 - Accent colour: `#22D3EE` (Tailwind cyan-400 family) — replaces the legacy `#00D9FF`.
+                 - Body font: Geist Sans via the official `geist` npm package
+                   (not next/font/google — Geist not exported there on Next 14.2.x).
+                 - Mono font: JetBrains Mono via `next/font/google`, used for
+                   eyebrow labels, step numbers, ProofBar stats, and packet-spec
+                   captions.
+                 Token surface: tailwind.config.ts §theme.extend.colors / fontSize
+                 / letterSpacing / spacing / transitionTimingFunction / keyframes.
 
 Reference work : (to be appended by owner — placeholder)
 
@@ -663,7 +668,7 @@ This block is the design contract. Every visual decision must reconcile with it 
 
 ### 11.1 Confirmed operating defaults (2026-05-14)
 
-- **Budget posture: LEAN.** Runtime dependencies are kept at the current count (5). New `dependencies` require written justification. `devDependencies` are added only when they verify a charter benchmark or directly enable a Phase 1.5 deliverable.
+- **Budget posture: LEAN.** Runtime dependencies are kept at the current count (6 (`next`, `react`, `react-dom`, `lucide-react`, `geist` — `framer-motion` removed in v2.1)). New `dependencies` require written justification. `devDependencies` are added only when they verify a charter benchmark or directly enable a Phase 1.5 deliverable.
 - **MCP servers: OPEN.** Third-party MCP servers may be used (e.g. `context7`, `playwright`) when they add evidence-grade value. No MCP that mutates project state without an audit trail.
 - **Skill registry: STABLE.** No new skills are installed without an owner-approved gap analysis (see §5). External taste skills are *harvested* per §9.2, not installed.
 
@@ -704,7 +709,7 @@ The lesson: a generic taste skill cannot distinguish an intentional brand choice
 
 ### High-level architecture
 
-Single-route Next.js 14 App Router site (`app/page.tsx` is the only marketing page; `app/layout.tsx` mounts metadata, fonts, the `Navigation` and `Footer`). The page composes section components from `components/sections/` in narrative order: Hero → Threats → Solution → Pipeline → Technology → Markets → Founder → Contact. All sections pull copy from `lib/content.ts` (the single source of truth for marketing strings) and visuals from Tailwind tokens defined in `tailwind.config.ts`.
+Single-route Next.js 14 App Router site (`app/page.tsx` is the only marketing page; `app/layout.tsx` mounts metadata, fonts, the `Navigation` and `Footer`). The page composes 10 section components from `components/sections/` in narrative order: Hero → Threats (ThreatLandscape) → Solution (Capabilities + ProofBar) → Pipeline → Architecture (NEW) → FiveLayers (NEW) → Technology (Standards) → Markets → Founder → Contact. All sections pull copy from `lib/content.ts` (the single source of truth for marketing strings) and visuals from Tailwind tokens defined in `tailwind.config.ts`.
 
 Output is a fully static export (`output: 'export'`) deployed to Cloudflare Pages at `jag-cybersecurity.io`. There is **no Node runtime at request time** — every page is prerendered to `out/` and served from the edge. This is why `next.config.mjs` `images: { unoptimized: true }` is set and why the live security policy lives in `public/_headers`, not `next.config.mjs`'s `headers()` (which only applies in `next dev` / `next start`).
 
@@ -724,25 +729,23 @@ These **must stay in sync by value**. A change to one without the other ships a 
 
 `lib/content.ts` is a typed export and the only place marketing copy lives. Sections import named string keys from it. To edit visible text: open `lib/content.ts`, change the string, save — TypeScript will flag any consumer that referenced a removed/renamed key at compile time.
 
-### Known Phase 1 gaps (not bugs — deferred to Phase 1.5)
+### Phase 1 gaps — ALL RESOLVED in v2.1 (website rebuild Phase 2, commits 01128ad..0b646b8)
 
-1. Section fade-in completes faster than perceptible — polish deferred.
-2. JAG logo is the literal text "JAG." — image integration deferred.
-3. Founder photo is a "K" placeholder.
-4. OG (Open Graph) social-sharing image not generated.
-5. Compliance badges are plain text rectangles.
-6. `framer-motion` is still in `package.json` (`^11.18.2`) but not imported on the `/` route — Phase 1.5 will either uninstall it or document an audited reintroduction.
+1. ✅ Section fade-in completes faster than perceptible — RESOLVED. FadeInOnScroll extended with `delay` prop (seconds API, back-compat with legacy sections); staggered reveals across Hero / Threats / Capabilities / Pipeline / Architecture / FiveLayers / Markets.
+2. ✅ JAG logo placeholder — RESOLVED. Real logo at `public/assets/jag-logo.png`, 473×512, 151 KB after sharp downscale.
+3. ✅ Founder photo placeholder — RESOLVED. Real photo at `public/assets/founder-photo.png`, 553×553, 445 KB.
+4. ✅ OG image — RESOLVED. Build-time generation via `scripts/og-build.mjs` using `@vercel/og`; output at `public/og.png`, 1200×630, 62 KB. Wired into `npm run build`.
+5. ✅ Compliance badges restyled — RESOLVED. 11-framework pill grid in Standards (Technology.tsx); no fake certifications, caption notes formal certs in roadmap.
+6. ✅ framer-motion in package.json — RESOLVED. Uninstalled in v2.1 after `rg "framer-motion" app/ components/` returned zero. Runtime dep count: 5 → 6 (added geist), net unchanged from charter §11.1 budget posture relative to v2.0 with framer.
 
 ### Open WEB-TASK entries (canonical decision tracker pending §6 adoption)
 
 | Task | Description | Wave |
 |---|---|---|
-| `WEB-TASK-20260515-A` | Pick accent colour token (cyan family direction per §11 — exact hex TBD) | Pre-launch |
-| `WEB-TASK-20260515-B` | Pick body font family (editorial sans or serif direction per §11 — exact family TBD) | Pre-launch |
-| `WEB-TASK-20260515-C` | Pick mono font family for monospace-pulses brand element (per §11) | Pre-launch |
 | `WEB-TASK-20260515-D` | Adopt `.claude/MEMORY.md` (per §6) — currently reserved | When first cross-session resume point needed |
 | `WEB-TASK-20260515-E` | Author `docs/design-system.md` companion | Pre-launch |
 | `WEB-TASK-20260515-F` | Author `docs/runbooks/claude-launch.md` companion | Backlog |
+| `WEB-TASK-20260515-G` | Provision Cloudflare Worker at api.jag-cybersecurity.io/contact (DNS resolution failed during Phase G probe — endpoint not yet provisioned). Contact form posts gracefully with error fallback to mailto:connect@. | Pre-launch |
 
 ### Reference paths
 
@@ -759,6 +762,18 @@ These **must stay in sync by value**. A change to one without the other ships a 
 - `docs/superpowers/specs/` — architectural specs and amendment logs
 - `docs/superpowers/plans/` — implementation plans
 - `.claude/settings.json` — inverted-permission allowlist
+- `components/sections/Architecture.tsx` — new section (Phase 2)
+- `components/sections/FiveLayers.tsx` — new section (Phase 2)
+- `components/ui/ShieldSVG.tsx` — Hero + Architecture shield primitive
+- `components/ui/ProofBar.tsx` — animated proof-points band
+- `components/ui/ArchitectureDiagram.tsx` — SVG perimeter-inspector diagram
+- `components/ui/PacketParticles.tsx` — canvas packet-flow overlay (~3 kB)
+- `components/ui/LayerCard.tsx` — Five Layers card primitive
+- `scripts/og-build.mjs` — build-time OG image generator
+- `tests/reduced-motion.spec.ts` — prefers-reduced-motion verification
+- `tests/visual-rebuild.spec.ts` — visual regression baseline (chromium, 5 breakpoints)
+- `docs/superpowers/specs/2026-05-15-website-rebuild-phase2-design.md` — Phase 2 design spec
+- `docs/superpowers/plans/2026-05-15-website-rebuild-phase2.md` — Phase 2 implementation plan
 
 ### Known security advisories (2026-05-14 snapshot — for owner triage, NOT auto-fix)
 
@@ -861,10 +876,11 @@ echo "   Backups        : ${BACKUP_DIR}/  and  ${CHARTER}.backup-${TS}"
 
 | Version | Date | Summary |
 |---|---|---|
+| 2.1 | 2026-05-15 | Website rebuild Phase 2 landed (11 commits 01128ad..0b646b8). Resolves WEB-TASK-A (accent #22D3EE), -B (body Geist via `geist` package), -C (mono JetBrains Mono). Closes all 6 Phase 1.5 gaps (fade-in polish, logo, founder photo, OG image, compliance restyle, framer-motion uninstall). Adds Architecture + FiveLayers as new sections — homepage now 10 sections. Project First Load JS baseline updates from 91.7 kB → 96.9 kB. Runtime deps: 5 → 6 (geist), framer-motion uninstalled (net change same vs v2.0 baseline if framer is counted). Cloudflare Worker contact endpoint probe found DNS not provisioned → new WEB-TASK-G filed. Charter §3.2 motion-library policy honoured: zero framer-motion imports on `/`; all motion via CSS keyframes + IntersectionObserver + SVG stroke-dasharray + one ~3 kB canvas (Architecture perimeter-inspector). |
 | 2.0 | 2026-05-15 | Structural §0 routing change (action classes Type-0/1/2; tiered FULL/ABBREVIATED coordination block). §1.5 ASK-BEFORE-ACTING enumerated triggers (7) replacing 95%-confidence rule, with destructive-verb scoped to action-naming use only. §1.3 FIX-OR-FILE replaces FIX-BUGS-ON-THE-SPOT. §1.7 hotfix escape valve with ≤30-day cap. §6 reserved for MEMORY.md (avoid over-engineering an artifact that doesn't exist). §8 generic-AI self-reject rule bounded to one rewrite then escalate. §9.2 harvest pattern formalised; §9.3 retirement procedure added. §11 expanded with reference brands, success metric, JAG-original anti-pattern list; PLANNED typography/colour decisions consolidated to single "Open decisions" pointer; canonical decision tracker is §12 only. §11.2 anti-pattern catalogue de-duplicated from §11. Appendix A defect schema. Appendix B SHA install workflow. Frontmatter `sha256_body` self-attestation. Trimmed from proposed v1.3 by removing companion-doc phantom references, tautological SHA verification step, unverified sister-charter reference, and fake-mechanical "keyword overlap" tiebreaker. |
 | 1.2 | 2026-05-15 | Motion-craft (§3.2.1, Emil Kowalski harvest) + anti-pattern catalogue (§10.2, Impeccable harvest). |
 | 1.0–1.1 | 2026-05-14 | Initial charter authoring; Phase 1.5 dev-tooling registry; project quick-context. |
 
 ---
 
-*End of Charter v2.0 — JAG Cybersecurity Website Edition.*
+*End of Charter v2.1 — JAG Cybersecurity Website Edition.*
