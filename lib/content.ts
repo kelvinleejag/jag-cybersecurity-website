@@ -486,3 +486,31 @@ export const markets = {
     { icon: 'Factory', title: 'Enterprise & Industrial IoT', body: 'Secure the expanding edge — OT networks, IoT fleets, distributed operations.' },
   ],
 } as const;
+
+export const founder = {
+  headline: 'Built by a Serial Founder. Engineered for Scale.',
+  name: 'Kelvin Lee',
+  title: 'Founder & Chief Architect',
+  paragraphs: [
+    'Kelvin is the founder and chief architect of JAG Cybersecurity. Over the past two decades, he has successfully co-founded and scaled three technology companies — two of which were acquired by investors — and continues to actively lead operations across Singapore and Malaysia.',
+    "With deep expertise spanning edge computing, AI systems architecture, and cybersecurity engineering, Kelvin personally designed and implemented JAG's full stack: from kernel-level network inspection through GPU-accelerated AI inference and autonomous response orchestration.",
+    'JAG represents over 12 months of dedicated engineering work, resulting in a production-validated platform tested in controlled red-team exercises.',
+  ],
+  linkedin: { url: 'https://www.linkedin.com/in/kelvinleeyl/', label: 'Connect on LinkedIn' },
+  photo: '/assets/founder-photo.png',
+} as const;
+
+export const contactSection = {
+  eyebrow: 'CONTACT',
+  headline: 'Get in Touch.',
+  lede:
+    "Interested in a demo, partnership, or investment conversation? We'd like to hear from you.",
+  endpoint: 'https://api.jag-cybersecurity.io/contact',
+  interests: ['Request Demo', 'Investor Inquiry', 'Partnership', 'Media', 'Other'],
+  direct: [
+    { label: 'GENERAL INQUIRIES', value: 'connect@jag-cybersecurity.io', icon: 'Mail', href: 'mailto:connect@jag-cybersecurity.io' },
+    { label: 'FOUNDER DIRECT', value: 'kelvin@jag-cybersecurity.io', icon: 'User', href: 'mailto:kelvin@jag-cybersecurity.io' },
+    { label: 'LOCATION', value: 'Penang, Malaysia · Southeast Asia Headquarters', icon: 'MapPin', href: null },
+    { label: 'LINKEDIN', value: 'JAG Cybersecurity', icon: 'Linkedin', href: 'https://www.linkedin.com/company/jag-cybersecurity/' },
+  ],
+} as const;

@@ -1,176 +1,155 @@
 'use client';
-import { useState, FormEvent } from 'react';
-import { Mail, MapPin, Linkedin, User } from 'lucide-react';
-import { Container } from '@/components/ui/Container';
-import { SectionHeader } from '@/components/ui/SectionHeader';
-import { FadeInOnScroll } from '@/components/ui/FadeInOnScroll';
-import { CONTACT } from '@/lib/content';
 
-type Status = 'idle' | 'sending' | 'success' | 'error';
+import { useState } from 'react';
+import { FadeInOnScroll } from '@/components/ui/FadeInOnScroll';
+import { contactSection } from '@/lib/content';
+import { Mail, User, MapPin, Linkedin, type LucideIcon } from 'lucide-react';
+
+const ICONS: Record<string, LucideIcon> = { Mail, User, MapPin, Linkedin };
+
+type Status = 'idle' | 'sending' | 'sent' | 'error';
 
 export function Contact() {
   const [status, setStatus] = useState<Status>('idle');
 
-  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (status === 'sending') return;
+    setStatus('sending');
     const form = e.currentTarget;
     const data = new FormData(form);
-    if ((data.get('honeypot') as string)?.length) {
-      setStatus('success');
+    if (data.get('website')) {
+      // Honeypot tripped — pretend success silently.
+      setStatus('sent');
       return;
     }
-    setStatus('sending');
     try {
-      const res = await fetch(CONTACT.endpoint, {
+      const res = await fetch(contactSection.endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: data.get('name'),
-          email: data.get('email'),
-          organization: data.get('organization'),
-          interest: data.get('interest'),
-          message: data.get('message'),
-        }),
+        body: JSON.stringify(Object.fromEntries(data.entries())),
       });
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      setStatus('success');
-      form.reset();
+      setStatus(res.ok ? 'sent' : 'error');
     } catch {
       setStatus('error');
     }
-  }
+  };
 
   return (
-    <section id="contact" className="section-padding-y bg-bg-primary">
-      <Container>
+    <section id="contact" className="bg-bg-base py-section">
+      <div className="mx-auto max-w-container px-gutter">
         <FadeInOnScroll>
-          <SectionHeader eyebrow="Contact" title={CONTACT.header} lead={CONTACT.lead} />
+          <p className="font-mono text-eyebrow uppercase tracking-eyebrow text-brand-cyan">
+            {contactSection.eyebrow}
+          </p>
         </FadeInOnScroll>
-        <div className="mt-16 grid gap-12 lg:grid-cols-5">
-          <FadeInOnScroll className="lg:col-span-3">
-            <form
-              onSubmit={handleSubmit}
-              className="rounded-xl border border-border bg-bg-secondary p-6 md:p-8 space-y-5"
-              noValidate
-            >
-              <input
-                type="text"
-                name="honeypot"
-                tabIndex={-1}
-                autoComplete="off"
-                aria-hidden="true"
-                className="hidden"
-              />
-              <Field label="Name" name="name" type="text" required />
-              <Field label="Email" name="email" type="email" required />
-              <Field label="Organization" name="organization" type="text" />
-              <div>
-                <label htmlFor="interest" className="block text-sm font-medium text-text-primary mb-2">
-                  Interest
+        <FadeInOnScroll delay={0.15}>
+          <h2 className="mt-3 font-display text-h2 font-semibold text-text-primary leading-heading tracking-heading text-balance">
+            {contactSection.headline}
+          </h2>
+        </FadeInOnScroll>
+        <FadeInOnScroll delay={0.3}>
+          <p className="mt-6 max-w-[65ch] text-body text-text-secondary">{contactSection.lede}</p>
+        </FadeInOnScroll>
+
+        <div className="mt-12 grid grid-cols-1 md:grid-cols-5 gap-12">
+          <FadeInOnScroll className="md:col-span-3 block">
+            <form onSubmit={onSubmit} className="space-y-5">
+              <input type="text" name="website" tabIndex={-1} aria-hidden="true" className="hidden" autoComplete="off" />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <label className="block">
+                  <span className="text-sm text-text-tertiary">Name</span>
+                  <input
+                    name="name"
+                    required
+                    className="mt-1 block w-full rounded-md bg-bg-surface border border-border-default px-4 py-3 text-text-primary placeholder-text-tertiary focus:outline-none focus:border-brand-cyan focus:shadow-glow-sm transition-all duration-fast"
+                  />
                 </label>
+                <label className="block">
+                  <span className="text-sm text-text-tertiary">Email</span>
+                  <input
+                    type="email"
+                    name="email"
+                    required
+                    className="mt-1 block w-full rounded-md bg-bg-surface border border-border-default px-4 py-3 text-text-primary placeholder-text-tertiary focus:outline-none focus:border-brand-cyan focus:shadow-glow-sm transition-all duration-fast"
+                  />
+                </label>
+              </div>
+              <label className="block">
+                <span className="text-sm text-text-tertiary">Organization (optional)</span>
+                <input
+                  name="organization"
+                  className="mt-1 block w-full rounded-md bg-bg-surface border border-border-default px-4 py-3 text-text-primary placeholder-text-tertiary focus:outline-none focus:border-brand-cyan focus:shadow-glow-sm transition-all duration-fast"
+                />
+              </label>
+              <label className="block">
+                <span className="text-sm text-text-tertiary">Interest</span>
                 <select
-                  id="interest"
                   name="interest"
-                  className="w-full rounded-md border border-border bg-bg-primary px-4 py-2.5 text-text-primary focus:border-accent focus:outline-none"
-                  defaultValue={CONTACT.interestOptions[0]}
+                  required
+                  className="mt-1 block w-full rounded-md bg-bg-surface border border-border-default px-4 py-3 text-text-primary focus:outline-none focus:border-brand-cyan focus:shadow-glow-sm transition-all duration-fast"
                 >
-                  {CONTACT.interestOptions.map((o) => (
-                    <option key={o} value={o}>
-                      {o}
-                    </option>
+                  {contactSection.interests.map((i) => (
+                    <option key={i} value={i}>{i}</option>
                   ))}
                 </select>
-              </div>
-              <div>
-                <label htmlFor="message" className="block text-sm font-medium text-text-primary mb-2">
-                  Message <span className="text-accent">*</span>
-                </label>
+              </label>
+              <label className="block">
+                <span className="text-sm text-text-tertiary">Message</span>
                 <textarea
-                  id="message"
                   name="message"
                   required
                   rows={5}
-                  className="w-full rounded-md border border-border bg-bg-primary px-4 py-2.5 text-text-primary focus:border-accent focus:outline-none resize-y"
+                  className="mt-1 block w-full rounded-md bg-bg-surface border border-border-default px-4 py-3 text-text-primary placeholder-text-tertiary focus:outline-none focus:border-brand-cyan focus:shadow-glow-sm transition-all duration-fast"
                 />
-              </div>
+              </label>
               <button
                 type="submit"
                 disabled={status === 'sending'}
-                className="inline-flex items-center justify-center rounded-md bg-accent px-6 py-3 font-medium text-bg-primary hover:bg-accent-hover transition-colors disabled:opacity-60"
+                className="w-full md:w-auto inline-flex items-center justify-center rounded-md bg-brand-cyan px-7 py-3 text-base font-semibold text-text-onAccent hover:bg-brand-cyanBright active:scale-[0.97] transition-all duration-fast disabled:opacity-60"
               >
-                {status === 'sending' ? 'Sending...' : 'Send Message'}
+                {status === 'idle' && 'Send Message'}
+                {status === 'sending' && 'Sending…'}
+                {status === 'sent' && 'Message Sent ✓'}
+                {status === 'error' && 'Retry'}
               </button>
-              {status === 'success' && (
-                <p className="text-sm text-metric-green">{CONTACT.successMessage}</p>
-              )}
               {status === 'error' && (
-                <p className="text-sm text-metric-amber">{CONTACT.errorMessage}</p>
+                <p role="alert" className="text-sm text-brand-red">
+                  Could not send. Please email connect@jag-cybersecurity.io directly.
+                </p>
               )}
             </form>
           </FadeInOnScroll>
-          <FadeInOnScroll delay={0.1} className="lg:col-span-2">
-            <div className="rounded-xl border border-border bg-bg-secondary p-6 md:p-8 space-y-5">
-              <h3 className="font-display text-lg font-bold text-text-primary">Direct Contact</h3>
-              <ContactRow icon={<Mail size={16} />} label="General Inquiries" value={CONTACT.direct.general} href={`mailto:${CONTACT.direct.general}`} />
-              <ContactRow icon={<User size={16} />} label="Founder Direct" value={CONTACT.direct.founder} href={`mailto:${CONTACT.direct.founder}`} />
-              <ContactRow icon={<MapPin size={16} />} label="Location" value={CONTACT.direct.location} />
-              <ContactRow icon={<Linkedin size={16} />} label="LinkedIn" value="JAG Cybersecurity" href={CONTACT.direct.linkedinHref} />
-            </div>
+
+          <FadeInOnScroll delay={0.2} className="md:col-span-2 block">
+            <ul className="rounded-lg border border-border-default bg-bg-surface p-7 space-y-6 list-none">
+              {contactSection.direct.map((d) => {
+                const Icon = ICONS[d.icon];
+                const inner = (
+                  <>
+                    <div className="flex items-center gap-2">
+                      <Icon className="h-4 w-4 text-brand-cyan" aria-hidden="true" />
+                      <p className="font-mono text-xs uppercase tracking-eyebrow text-brand-cyan">{d.label}</p>
+                    </div>
+                    <p className="mt-2 text-body text-text-secondary">{d.value}</p>
+                  </>
+                );
+                return (
+                  <li key={d.label}>
+                    {d.href ? (
+                      <a href={d.href} target={d.href.startsWith('http') ? '_blank' : undefined} rel={d.href.startsWith('http') ? 'noopener noreferrer' : undefined} className="block hover:text-text-primary transition-colors duration-fast">
+                        {inner}
+                      </a>
+                    ) : (
+                      <div>{inner}</div>
+                    )}
+                  </li>
+                );
+              })}
+            </ul>
           </FadeInOnScroll>
         </div>
-      </Container>
+      </div>
     </section>
   );
-}
-
-function Field({
-  label,
-  name,
-  type,
-  required = false,
-}: {
-  label: string;
-  name: string;
-  type: string;
-  required?: boolean;
-}) {
-  return (
-    <div>
-      <label htmlFor={name} className="block text-sm font-medium text-text-primary mb-2">
-        {label} {required && <span className="text-accent">*</span>}
-      </label>
-      <input
-        id={name}
-        name={name}
-        type={type}
-        required={required}
-        className="w-full rounded-md border border-border bg-bg-primary px-4 py-2.5 text-text-primary focus:border-accent focus:outline-none"
-      />
-    </div>
-  );
-}
-
-function ContactRow({
-  icon,
-  label,
-  value,
-  href,
-}: {
-  icon: React.ReactNode;
-  label: string;
-  value: string;
-  href?: string;
-}) {
-  const inner = (
-    <div className="flex items-start gap-3">
-      <span className="mt-1 text-text-tertiary">{icon}</span>
-      <div>
-        <p className="text-xs uppercase tracking-wider text-text-tertiary font-mono">{label}</p>
-        <p className={`mt-1 text-sm ${href ? 'text-text-primary hover:text-accent transition-colors' : 'text-text-secondary'}`}>
-          {value}
-        </p>
-      </div>
-    </div>
-  );
-  return href ? <a href={href}>{inner}</a> : inner;
 }
