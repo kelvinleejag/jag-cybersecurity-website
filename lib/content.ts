@@ -325,3 +325,54 @@ export const capabilities = {
       'Validated in controlled red-team exercise — April 2026. Patents filed with MyIPO under Solarz personal name, assignment to JAG Cybersecurity Sdn Bhd in Q3-Q4 2026.',
   },
 } as const;
+
+export const pipeline = {
+  eyebrow: 'HOW IT WORKS',
+  headline: 'Five-Stage Tiered Inference Pipeline.',
+  lede:
+    "JAG's patented architecture routes every packet through five escalating inference tiers — fast decisions at the edge, deep analysis where it matters.",
+  stages: [
+    {
+      step: '01',
+      title: 'Inspect',
+      tagline: 'Watches every packet',
+      detail:
+        'Wire-speed inspection of network packets. Kernel-level visibility before any rule fires.',
+      tone: 'cyanDeep',
+    },
+    {
+      step: '02',
+      title: 'Block',
+      tagline: 'Stops known bad traffic',
+      detail:
+        'iptables/ipset enforcement at line rate. Known signatures and protocol violations dropped immediately.',
+      tone: 'cyanDeep',
+    },
+    {
+      step: '03',
+      title: 'Quick Think',
+      tagline: 'Fast on-device AI checks suspicious traffic',
+      detail:
+        'Lightweight CPU-tier classifier resolves ambiguous traffic in sub-second. Most ambiguity ends here.',
+      tone: 'cyan',
+    },
+    {
+      step: '04',
+      title: 'Deep Think',
+      tagline: 'Foundation-Sec-8B reasons through the trickiest cases',
+      detail:
+        'GPU-accelerated cybersecurity-specialized LLM. Reasons about novel attack patterns, social engineering, multi-stage intrusions.',
+      tone: 'cyanBright',
+    },
+    {
+      step: '05',
+      title: 'Act',
+      tagline: 'Takes action, alerts, seals the proof',
+      detail:
+        'Autonomous block / quarantine / alert / escalate. Cryptographic evidence bundle written to tamper-evident ledger.',
+      tone: 'cyanBright',
+    },
+  ],
+  caption:
+    'Most threats are stopped at the gate (01-02). Only the suspicious reach Quick Think (03). Only the trickiest reach Deep Think (04). The right amount of brainpower for every threat.',
+} as const;

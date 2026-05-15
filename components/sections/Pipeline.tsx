@@ -1,53 +1,96 @@
-import { ChevronRight } from 'lucide-react';
-import { Container } from '@/components/ui/Container';
-import { SectionHeader } from '@/components/ui/SectionHeader';
 import { FadeInOnScroll } from '@/components/ui/FadeInOnScroll';
-import { PIPELINE } from '@/lib/content';
+import { pipeline } from '@/lib/content';
+
+const TONE: Record<string, string> = {
+  cyanDeep: 'border-brand-cyanDeep',
+  cyan: 'border-brand-cyan',
+  cyanBright: 'border-brand-cyanBright shadow-glow-sm',
+};
 
 export function Pipeline() {
   return (
-    <section id="pipeline" className="section-padding-y bg-bg-primary">
-      <Container>
+    <section id="pipeline" className="bg-bg-base py-section">
+      <div className="mx-auto max-w-container px-gutter">
         <FadeInOnScroll>
-          <SectionHeader
-            eyebrow="How It Works"
-            title={PIPELINE.header}
-            lead={PIPELINE.lead}
-          />
+          <p className="font-mono text-eyebrow uppercase tracking-eyebrow text-brand-cyan">
+            {pipeline.eyebrow}
+          </p>
         </FadeInOnScroll>
-        <FadeInOnScroll>
-          <div
-            className="mt-12 overflow-x-auto focus-visible:outline-none"
-            role="img"
-            tabIndex={0}
-            aria-label="Pipeline stages: Packet, Guardian, CPU LLM, GPU LLM, Action"
+        <FadeInOnScroll delay={0.15}>
+          <h2 className="mt-3 font-display text-h2 font-semibold text-text-primary leading-heading tracking-heading max-w-[28ch] text-balance">
+            {pipeline.headline}
+          </h2>
+        </FadeInOnScroll>
+        <FadeInOnScroll delay={0.3}>
+          <p className="mt-6 max-w-[65ch] text-body text-text-secondary">{pipeline.lede}</p>
+        </FadeInOnScroll>
+
+        {/* Desktop horizontal flow with animated SVG connecting lines */}
+        <div className="relative mt-16 hidden lg:block">
+          <svg
+            className="absolute inset-x-0 top-1/2 -z-0 h-2 w-full -translate-y-1/2"
+            viewBox="0 0 1200 8"
+            preserveAspectRatio="none"
+            aria-hidden="true"
           >
-            <div className="flex items-center gap-3 min-w-max px-2 py-4">
-              {PIPELINE.stages.map((s, i) => (
-                <div key={s.label} className="flex items-center gap-3">
-                  <div className="rounded-md border border-accent/40 bg-accent/5 px-4 py-2 font-mono text-xs uppercase tracking-widest text-accent shadow-glow-sm">
-                    {s.label}
-                  </div>
-                  {i < PIPELINE.stages.length - 1 && <ChevronRight size={16} className="text-accent/60" />}
-                </div>
-              ))}
-            </div>
-          </div>
-        </FadeInOnScroll>
-        <ol className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-5">
-          {PIPELINE.stages.map((s, i) => (
-            <li key={s.title}>
-              <FadeInOnScroll delay={i * 0.04} className="rounded-xl border border-border bg-bg-secondary p-6 h-full block">
-                <div className="font-mono text-xs text-accent mb-2">0{i + 1}</div>
-                <h3 className="font-display text-base font-bold text-text-primary mb-2">
+            {[0, 1, 2, 3].map((i) => (
+              <line
+                key={i}
+                x1={120 + i * 240}
+                y1="4"
+                x2={360 + i * 240}
+                y2="4"
+                stroke="#22D3EE"
+                strokeWidth="1"
+                strokeOpacity="0.4"
+                pathLength="1"
+                strokeDasharray="1"
+                strokeDashoffset="1"
+                className="animate-draw-stroke"
+                style={{ animationDelay: `${i * 300}ms` }}
+              />
+            ))}
+          </svg>
+          <ol className="relative grid grid-cols-5 gap-4">
+            {pipeline.stages.map((s, i) => (
+              <li key={s.step}>
+                <FadeInOnScroll delay={0.15 * i} className={`relative block bg-bg-surface border ${TONE[s.tone]} rounded-lg p-6 h-full`}>
+                  <p className="font-mono text-h2 font-semibold text-brand-cyan leading-none">
+                    {s.step}
+                  </p>
+                  <h3 className="mt-4 font-display text-h3 font-semibold text-text-primary leading-heading tracking-heading">
+                    {s.title}
+                  </h3>
+                  <p className="mt-2 font-mono text-xs text-text-tertiary">{s.tagline}</p>
+                  <p className="mt-4 text-sm text-text-secondary leading-body">{s.detail}</p>
+                </FadeInOnScroll>
+              </li>
+            ))}
+          </ol>
+        </div>
+
+        {/* Mobile vertical stack */}
+        <ol className="mt-16 grid gap-4 lg:hidden">
+          {pipeline.stages.map((s, i) => (
+            <li key={s.step}>
+              <FadeInOnScroll delay={0.1 * i} className={`block bg-bg-surface border ${TONE[s.tone]} rounded-lg p-6`}>
+                <p className="font-mono text-h2 font-semibold text-brand-cyan leading-none">{s.step}</p>
+                <h3 className="mt-4 font-display text-h3 font-semibold text-text-primary leading-heading tracking-heading">
                   {s.title}
                 </h3>
-                <p className="text-sm text-text-secondary leading-relaxed">{s.body}</p>
+                <p className="mt-2 font-mono text-xs text-text-tertiary">{s.tagline}</p>
+                <p className="mt-4 text-sm text-text-secondary leading-body">{s.detail}</p>
               </FadeInOnScroll>
             </li>
           ))}
         </ol>
-      </Container>
+
+        <FadeInOnScroll delay={0.5}>
+          <p className="mt-12 text-center italic text-text-tertiary max-w-[70ch] mx-auto">
+            {pipeline.caption}
+          </p>
+        </FadeInOnScroll>
+      </div>
     </section>
   );
 }
