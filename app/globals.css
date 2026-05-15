@@ -5,6 +5,7 @@
 :root {
   color-scheme: dark;
   --font-body: var(--font-geist-sans);
+  --section-padding: clamp(4rem, 8vw, 8rem);
 }
 
 html {
@@ -15,6 +16,22 @@ body {
   font-family: var(--font-body), system-ui, sans-serif;
   background: #05080F;
   color: #F8FAFC;
+}
+
+@layer base {
+  *:focus-visible {
+    @apply outline-none ring-2 ring-brand-cyan ring-offset-2 ring-offset-bg-base;
+  }
+}
+
+@layer utilities {
+  .section-padding-y {
+    padding-top: var(--section-padding);
+    padding-bottom: var(--section-padding);
+  }
+  .text-balance {
+    text-wrap: balance;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

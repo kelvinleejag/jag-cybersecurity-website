@@ -58,7 +58,7 @@ export default function Navigation() {
           </ul>
           <a
             href="#contact"
-            className="hidden md:inline-flex items-center rounded-md bg-brand-cyan px-5 py-2 text-sm font-semibold text-text-onAccent hover:bg-brand-cyanBright transition-colors duration-fast"
+            className="hidden md:inline-flex items-center rounded-md bg-brand-cyan px-5 py-2 text-sm font-semibold text-text-onAccent hover:bg-brand-cyanBright active:scale-[0.97] transition-all duration-fast"
           >
             Request Demo
           </a>
@@ -66,10 +66,10 @@ export default function Navigation() {
             type="button"
             aria-label="Open menu"
             aria-expanded={open}
-            className="md:hidden text-text-primary"
+            className="md:hidden text-text-primary active:scale-[0.97] transition-transform duration-fast"
             onClick={() => setOpen(true)}
           >
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
               <path d="M3 6h18M3 12h18M3 18h18" />
             </svg>
           </button>
@@ -90,10 +90,10 @@ export default function Navigation() {
           <button
             type="button"
             aria-label="Close menu"
-            className="text-text-primary"
+            className="text-text-primary active:scale-[0.97] transition-transform duration-fast"
             onClick={() => setOpen(false)}
           >
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
               <path d="M6 6l12 12M18 6L6 18" />
             </svg>
           </button>
@@ -113,7 +113,7 @@ export default function Navigation() {
           <li>
             <a
               href="#contact"
-              className="inline-flex items-center rounded-md bg-brand-cyan px-5 py-3 text-base font-semibold text-text-onAccent"
+              className="inline-flex items-center rounded-md bg-brand-cyan px-5 py-3 text-base font-semibold text-text-onAccent hover:bg-brand-cyanBright active:scale-[0.97] transition-all duration-fast"
               onClick={() => setOpen(false)}
             >
               Request Demo
