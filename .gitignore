@@ -39,3 +39,15 @@ next-env.d.ts
 
 # Claude Code local settings (do not commit)
 .claude/
+
+# Playwright
+/playwright-report/
+/test-results/
+/playwright/.cache/
+
+# Lighthouse CI
+/.lighthouseci/
+/lighthouse-reports/
+
+# Personal-workflow utilities (not part of the website)
+/jag-mirror-pull.sh
