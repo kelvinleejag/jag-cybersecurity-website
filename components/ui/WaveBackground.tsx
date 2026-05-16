@@ -5,38 +5,39 @@ import { useEffect, useRef } from 'react';
 /**
  * WaveBackground — canvas-rendered parallel sine-wave ribbons.
  *
- * Replaces the prior SVG `RibbonBackground` (which was a static set of
- * gaussian-blurred bezier paths translating horizontally — owner reported
- * 2026-05-16 it looked static / not animated enough). This version draws
- * ~14 parallel glowing lines that genuinely undulate using sin() with
- * per-line phase, amplitude, frequency, and speed variance — closer to
- * the "Waving Ribbons of Light Loop" motionarray reference.
+ * v3 (2026-05-16 round 3): waves were invisible in the previous build —
+ * alpha was too low (0.22-0.5) for the lines to read against the pure-black
+ * #05080F field, and early-return on prefers-reduced-motion left the canvas
+ * literally blank for any user with motion preferences set. Both fixed:
+ *   - alpha bumped to 0.5-0.95
+ *   - shadowBlur bumped to 28
+ *   - stroke width bumped
+ *   - line count bumped from 14 to 18
+ *   - reduced-motion now draws a single static frame (lines visible, no
+ *     animation) instead of returning early
  *
  * Charter compliance:
- *   - prefers-reduced-motion: returns early, canvas stays empty. The
- *     globals.css blanket short-circuit covers any related transitions.
- *   - visibilitychange: paused on tab blur to save battery.
- *   - DPR capped at 2 to avoid burning fill rate on retina.
- *   - Lines drawn with shadowBlur for glow without WebGL.
- *   - Single rAF loop. Cleanup on unmount cancels the loop.
- *   - Bundle delta: ~3 kB code; no dependencies.
+ *   - visibilitychange: paused on tab blur to save battery
+ *   - DPR capped at 2 to avoid burning fill rate on retina
+ *   - Single rAF loop; cleanup cancels it
+ *   - Bundle delta: ~3 kB code; no dependencies
  */
 
 interface Line {
-  baseFrac: number;     // baseline Y as fraction of canvas height (0..1)
-  amplitude: number;    // pixel-amplitude of the sine wave
-  frequency: number;    // wavelength in pixels
-  speed: number;        // phase advance per ms
-  phase: number;        // initial phase offset
-  width: number;        // stroke width
-  alpha: number;        // base opacity (0..1)
-  hueShift: number;     // 0=brand-cyan, 1=cyanBright, -1=cyanDeep
+  baseFrac: number;
+  amplitude: number;
+  frequency: number;
+  speed: number;
+  phase: number;
+  width: number;
+  alpha: number;
+  hueShift: number;
 }
 
 const COLORS = {
-  cyan: '34, 211, 238',        // brand.cyan
-  cyanBright: '103, 232, 249', // brand.cyanBright
-  cyanDeep: '8, 145, 178',     // brand.cyanDeep
+  cyan: '34, 211, 238',
+  cyanBright: '103, 232, 249',
+  cyanDeep: '8, 145, 178',
 };
 
 function pickColor(line: Line): string {
@@ -46,22 +47,61 @@ function pickColor(line: Line): string {
 }
 
 function makeLines(): Line[] {
-  // Distribute lines vertically across the viewport with slight jitter
-  // so they read as a coherent "ribbon band" rather than a perfect grid.
-  const LINE_COUNT = 14;
+  const LINE_COUNT = 18;
   return Array.from({ length: LINE_COUNT }, (_, i) => {
     const t = i / (LINE_COUNT - 1);
     return {
-      baseFrac: 0.08 + t * 0.84 + (Math.random() - 0.5) * 0.02,
-      amplitude: 28 + Math.random() * 22,
-      frequency: 280 + Math.random() * 220,
-      speed: 0.00018 + Math.random() * 0.00012,
+      baseFrac: 0.05 + t * 0.9 + (Math.random() - 0.5) * 0.015,
+      amplitude: 32 + Math.random() * 28,
+      frequency: 240 + Math.random() * 220,
+      speed: 0.00018 + Math.random() * 0.00014,
       phase: Math.random() * Math.PI * 2,
-      width: 1.2 + Math.random() * 1.4,
-      alpha: 0.22 + Math.random() * 0.28,
+      width: 1.5 + Math.random() * 1.8,
+      alpha: 0.5 + Math.random() * 0.45,
       hueShift: (Math.random() - 0.5) * 2,
     };
   });
+}
+
+function drawFrame(
+  ctx: CanvasRenderingContext2D,
+  lines: Line[],
+  width: number,
+  height: number,
+  time: number,
+) {
+  ctx.clearRect(0, 0, width, height);
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+
+  for (const line of lines) {
+    const baseY = line.baseFrac * height;
+    const color = pickColor(line);
+    ctx.strokeStyle = `rgba(${color}, ${line.alpha})`;
+    ctx.lineWidth = line.width;
+    ctx.shadowBlur = 28;
+    ctx.shadowColor = `rgba(${color}, ${Math.min(1, line.alpha * 1.8)})`;
+
+    ctx.beginPath();
+    const STEP = 6;
+    for (let x = -STEP; x <= width + STEP; x += STEP) {
+      const y =
+        baseY +
+        line.amplitude *
+          Math.sin(x / line.frequency + time * line.speed + line.phase) +
+        line.amplitude *
+          0.35 *
+          Math.sin(
+            x / (line.frequency * 0.45) +
+              time * line.speed * 1.7 +
+              line.phase * 1.3,
+          );
+      if (x === -STEP) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+  }
+  ctx.shadowBlur = 0;
 }
 
 export function WaveBackground() {
@@ -69,7 +109,6 @@ export function WaveBackground() {
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -89,9 +128,22 @@ export function WaveBackground() {
       canvas.style.width = `${width}px`;
       canvas.style.height = `${height}px`;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      // Re-draw immediately after resize so the lines never blank out.
+      drawFrame(ctx, lines, width, height, performance.now());
     };
     resize();
     window.addEventListener('resize', resize);
+
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (reducedMotion) {
+      // Static frame — lines visible, no animation. Avoids the prior
+      // failure mode where reduced-motion users saw a completely blank
+      // canvas.
+      return () => {
+        window.removeEventListener('resize', resize);
+      };
+    }
 
     let running = document.visibilityState === 'visible';
     const onVis = () => {
@@ -101,42 +153,7 @@ export function WaveBackground() {
 
     let rafId = 0;
     const tick = (time: number) => {
-      if (running) {
-        ctx.clearRect(0, 0, width, height);
-        ctx.lineCap = 'round';
-        ctx.lineJoin = 'round';
-
-        for (const line of lines) {
-          const baseY = line.baseFrac * height;
-          const color = pickColor(line);
-          ctx.strokeStyle = `rgba(${color}, ${line.alpha})`;
-          ctx.lineWidth = line.width;
-          ctx.shadowBlur = 18;
-          ctx.shadowColor = `rgba(${color}, ${Math.min(1, line.alpha * 2.2)})`;
-
-          ctx.beginPath();
-          const STEP = 6;
-          for (let x = -STEP; x <= width + STEP; x += STEP) {
-            // Two stacked sine waves at different frequencies and speeds
-            // produce non-repeating organic motion instead of a clean sine.
-            const y =
-              baseY +
-              line.amplitude *
-                Math.sin(x / line.frequency + time * line.speed + line.phase) +
-              line.amplitude *
-                0.35 *
-                Math.sin(
-                  x / (line.frequency * 0.45) +
-                    time * line.speed * 1.7 +
-                    line.phase * 1.3,
-                );
-            if (x === -STEP) ctx.moveTo(x, y);
-            else ctx.lineTo(x, y);
-          }
-          ctx.stroke();
-        }
-        ctx.shadowBlur = 0;
-      }
+      if (running) drawFrame(ctx, lines, width, height, time);
       rafId = requestAnimationFrame(tick);
     };
     rafId = requestAnimationFrame(tick);

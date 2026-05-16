@@ -36,7 +36,7 @@ export function Solution() {
                       className="absolute left-0 top-0 h-px w-0 bg-gradient-to-r from-brand-cyan to-transparent transition-all duration-base ease-standard group-hover:w-full"
                       aria-hidden="true"
                     />
-                    <CapabilityIcon kind={kind} className="h-16 w-16" />
+                    <CapabilityIcon kind={kind} className="h-20 w-32" />
                     <h3 className="mt-6 font-display text-h3 font-semibold text-text-primary leading-heading tracking-heading">
                       {c.title}
                     </h3>
