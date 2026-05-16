@@ -115,7 +115,7 @@ export function Contact() {
               </button>
               {status === 'error' && (
                 <p role="alert" className="text-sm text-brand-red">
-                  Could not send. Please email connect@jag-cybersecurity.io directly.
+                  Could not send. Please email jag@jag-cybersecurity.io directly.
                 </p>
               )}
             </form>

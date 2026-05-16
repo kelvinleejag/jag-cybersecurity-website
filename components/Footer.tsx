@@ -28,7 +28,7 @@ const COLS = [
   {
     title: 'Contact',
     links: [
-      { href: 'mailto:connect@jag-cybersecurity.io', label: 'connect@' },
+      { href: 'mailto:jag@jag-cybersecurity.io', label: 'jag@' },
       { href: 'mailto:kelvin@jag-cybersecurity.io', label: 'kelvin@' },
       { href: '#contact', label: 'Demo Request' },
     ],

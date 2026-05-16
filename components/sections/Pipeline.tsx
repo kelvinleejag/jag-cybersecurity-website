@@ -1,4 +1,5 @@
 import { FadeInOnScroll } from '@/components/ui/FadeInOnScroll';
+import { PipelineFunnel } from '@/components/ui/PipelineFunnel';
 import { pipeline } from '@/lib/content';
 
 const TONE: Record<string, string> = {
@@ -86,7 +87,13 @@ export function Pipeline() {
         </ol>
 
         <FadeInOnScroll delay={0.5}>
-          <p className="mt-12 text-center italic text-text-tertiary max-w-[70ch] mx-auto">
+          <div className="mt-16">
+            <PipelineFunnel />
+          </div>
+        </FadeInOnScroll>
+
+        <FadeInOnScroll delay={0.6}>
+          <p className="mt-10 text-center italic text-text-tertiary max-w-[70ch] mx-auto">
             {pipeline.caption}
           </p>
         </FadeInOnScroll>

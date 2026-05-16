@@ -1,5 +1,6 @@
 import { FadeInOnScroll } from '@/components/ui/FadeInOnScroll';
 import { LayerCard } from '@/components/ui/LayerCard';
+import { LayerStack } from '@/components/ui/LayerStack';
 import { fiveLayers } from '@/lib/content';
 
 export function FiveLayers() {
@@ -18,6 +19,11 @@ export function FiveLayers() {
         </FadeInOnScroll>
         <FadeInOnScroll delay={0.3}>
           <p className="mt-6 max-w-[65ch] text-body text-text-secondary">{fiveLayers.lede}</p>
+        </FadeInOnScroll>
+        <FadeInOnScroll delay={0.45}>
+          <div className="mt-12">
+            <LayerStack />
+          </div>
         </FadeInOnScroll>
         <ol className="mt-16 grid grid-cols-1 md:grid-cols-2 gap-6">
           {fiveLayers.layers.map((l, i) => (

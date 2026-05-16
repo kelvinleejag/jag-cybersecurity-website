@@ -184,7 +184,7 @@ export const FOUNDER = {
   name: 'Kelvin Lee',
   title: 'Founder & Chief Architect',
   bio: [
-    "Kelvin is the founder and chief architect of JAG Cybersecurity. Over the past two decades, he has successfully co-founded and scaled three technology companies — two of which were acquired by investors — and continues to actively lead operations across Singapore and Malaysia.",
+    "Kelvin is the founder and chief architect of JAG Cybersecurity. Over the past two decades, he has successfully co-founded and scaled three technology companies — two of which were acquired by investors.",
     "With deep expertise spanning edge computing, AI systems architecture, and cybersecurity engineering, Kelvin personally designed and implemented JAG's full stack: from kernel-level network inspection through GPU-accelerated AI inference and autonomous response orchestration.",
     'JAG represents over 12 months of dedicated engineering work, resulting in a production-validated platform tested in controlled red team exercises.',
   ],
@@ -196,9 +196,9 @@ export const CONTACT = {
   lead:
     "Interested in a demo, partnership, or investment conversation? We'd like to hear from you.",
   endpoint: 'https://api.jag-cybersecurity.io/contact',
-  emailFallback: 'connect@jag-cybersecurity.io',
+  emailFallback: 'jag@jag-cybersecurity.io',
   successMessage: "Message received. We'll respond within 48 hours.",
-  errorMessage: 'Unable to send. Please email connect@jag-cybersecurity.io directly.',
+  errorMessage: 'Unable to send. Please email jag@jag-cybersecurity.io directly.',
   interestOptions: [
     'Request Demo',
     'Partnership Inquiry',
@@ -206,9 +206,9 @@ export const CONTACT = {
     'General Inquiry',
   ],
   direct: {
-    general: 'connect@jag-cybersecurity.io',
+    general: 'jag@jag-cybersecurity.io',
     founder: 'kelvin@jag-cybersecurity.io',
-    location: 'Penang, Malaysia / Southeast Asia Headquarters',
+    location: '',
     linkedinHref: '#',
   },
 } as const;
@@ -233,9 +233,9 @@ export const FOOTER = {
     { label: 'Contact', href: '#contact' },
   ],
   copyright: '© 2026 JAG Cybersecurity. All rights reserved.',
-  patentNote: 'Patents filed with MyIPO. International filings in preparation.',
-  general: 'connect@jag-cybersecurity.io',
-  location: 'Penang, Malaysia',
+  patentNote: 'Six patents filed. International filings in preparation.',
+  general: 'jag@jag-cybersecurity.io',
+  location: '',
   linkedinHref: '#',
 } as const;
 
@@ -322,7 +322,7 @@ export const capabilities = {
       { value: 113, suffix: ' claims', label: 'Patent claims filed' },
     ],
     caption:
-      'Validated in controlled red-team exercise — April 2026. Patents filed with MyIPO under Solarz personal name, assignment to JAG Cybersecurity Sdn Bhd in Q3-Q4 2026.',
+      "Validated in controlled red-team exercise — April 2026. Six patents filed under founder's personal name; assignment to JAG Cybersecurity in Q3-Q4 2026.",
   },
 } as const;
 
@@ -448,7 +448,7 @@ export const fiveLayers = {
   closing: {
     title: 'A Defensible Moat by Design',
     body:
-      'Protected under a portfolio of 6 patents · 113 claims · filed with MyIPO. The integrated architecture cannot be replicated without infringing.',
+      'Protected under a portfolio of 6 patents · 113 claims. The integrated architecture cannot be replicated without infringing.',
   },
 } as const;
 
@@ -464,7 +464,7 @@ export const standards = {
     'OWASP Top 10 + LLM Top 10',
     'CWE / CAPEC',
     'GDPR Art. 44-49',
-    'PDPA (Malaysia)',
+    'PDPA',
     'EU AI Act',
     'ISA 18.2',
     'IEC 62443',
@@ -492,7 +492,7 @@ export const founder = {
   name: 'Kelvin Lee',
   title: 'Founder & Chief Architect',
   paragraphs: [
-    'Kelvin is the founder and chief architect of JAG Cybersecurity. Over the past two decades, he has successfully co-founded and scaled three technology companies — two of which were acquired by investors — and continues to actively lead operations across Singapore and Malaysia.',
+    'Kelvin is the founder and chief architect of JAG Cybersecurity. Over the past two decades, he has successfully co-founded and scaled three technology companies — two of which were acquired by investors.',
     "With deep expertise spanning edge computing, AI systems architecture, and cybersecurity engineering, Kelvin personally designed and implemented JAG's full stack: from kernel-level network inspection through GPU-accelerated AI inference and autonomous response orchestration.",
     'JAG represents over 12 months of dedicated engineering work, resulting in a production-validated platform tested in controlled red-team exercises.',
   ],
@@ -508,9 +508,8 @@ export const contactSection = {
   endpoint: 'https://api.jag-cybersecurity.io/contact',
   interests: ['Request Demo', 'Investor Inquiry', 'Partnership', 'Media', 'Other'],
   direct: [
-    { label: 'GENERAL INQUIRIES', value: 'connect@jag-cybersecurity.io', icon: 'Mail', href: 'mailto:connect@jag-cybersecurity.io' },
+    { label: 'GENERAL INQUIRIES', value: 'jag@jag-cybersecurity.io', icon: 'Mail', href: 'mailto:jag@jag-cybersecurity.io' },
     { label: 'FOUNDER DIRECT', value: 'kelvin@jag-cybersecurity.io', icon: 'User', href: 'mailto:kelvin@jag-cybersecurity.io' },
-    { label: 'LOCATION', value: 'Penang, Malaysia · Southeast Asia Headquarters', icon: 'MapPin', href: null },
     { label: 'LINKEDIN', value: 'JAG Cybersecurity', icon: 'Linkedin', href: 'https://www.linkedin.com/company/jag-cybersecurity/' },
   ],
 } as const;

@@ -1,4 +1,5 @@
 import { FadeInOnScroll } from '@/components/ui/FadeInOnScroll';
+import { ThreatTimeline } from '@/components/ui/ThreatTimeline';
 import { threatLandscape } from '@/lib/content';
 import { ShieldOff, AlertTriangle, Users, Network, type LucideIcon } from 'lucide-react';
 
@@ -20,6 +21,11 @@ export function Threats() {
         </FadeInOnScroll>
         <FadeInOnScroll delay={0.3}>
           <p className="mt-6 max-w-[65ch] text-body text-text-secondary">{threatLandscape.lede}</p>
+        </FadeInOnScroll>
+        <FadeInOnScroll delay={0.45}>
+          <div className="mt-12">
+            <ThreatTimeline />
+          </div>
         </FadeInOnScroll>
         <div className="mt-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {threatLandscape.cards.map((c, i) => {
