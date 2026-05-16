@@ -1,5 +1,6 @@
 import FadeInOnScroll from '@/components/ui/FadeInOnScroll';
 import ShieldSVG from '@/components/ui/ShieldSVG';
+import { HeroWave } from '@/components/ui/HeroWave';
 import { hero } from '@/lib/content';
 
 export function Hero() {
@@ -8,6 +9,7 @@ export function Hero() {
       id="hero"
       className="relative min-h-[90vh] flex items-center justify-center overflow-hidden px-gutter pt-32 pb-section"
     >
+      <HeroWave />
       <div
         className="pointer-events-none absolute inset-0 opacity-0 animate-glow-bloom"
         style={{

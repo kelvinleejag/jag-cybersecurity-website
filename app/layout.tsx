@@ -3,7 +3,6 @@ import { GeistSans } from 'geist/font/sans';
 import { JetBrains_Mono } from 'next/font/google';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
-import { WaveBackground } from '@/components/ui/WaveBackground';
 import './globals.css';
 
 const jetbrainsMono = JetBrains_Mono({
@@ -42,7 +41,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`${GeistSans.variable} ${jetbrainsMono.variable}`}>
       <body className="bg-bg-base text-text-primary antialiased">
-        <WaveBackground />
         <Navigation />
         <main>{children}</main>
         <Footer />
