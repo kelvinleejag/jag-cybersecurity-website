@@ -1,14 +1,37 @@
 /** @type {import('next').NextConfig} */
+
+// CSP construction: Next.js dev mode uses React Fast Refresh which requires
+// `unsafe-eval` to execute hot-reload module replacement. We allow it ONLY
+// in development. Production CSP (served via public/_headers for Cloudflare
+// Pages) does NOT include unsafe-eval — strict policy stands at deploy.
+//
+// Why this matters: previously, dev-mode CSP blocked Fast Refresh → React
+// client-side hydration failed silently → useEffect never ran → canvas
+// stayed blank, animated SVG bars never grew, MetricCounter never counted
+// up. From the browser console:
+//   Uncaught EvalError: Evaluating a string as JavaScript violates the
+//   following CSP directive: script-src 'self' 'unsafe-inline'
+//
+// Charter §12 two-file invariant note: public/_headers must continue to
+// encode the PRODUCTION policy (no unsafe-eval). This file's headers()
+// only apply in `next dev` and `next start`, never in static export.
+
+const isDev = process.env.NODE_ENV !== 'production';
+
+const scriptSrc = isDev
+  ? "script-src 'self' 'unsafe-inline' 'unsafe-eval'"
+  : "script-src 'self' 'unsafe-inline'";
+
 const securityHeaders = [
   {
     key: 'Content-Security-Policy',
     value: [
       "default-src 'self'",
-      "script-src 'self' 'unsafe-inline'",
+      scriptSrc,
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
       "font-src 'self' https://fonts.gstatic.com data:",
       "img-src 'self' data: https:",
-      "connect-src 'self' https://api.jag-cybersecurity.io",
+      "connect-src 'self' https://api.jag-cybersecurity.io" + (isDev ? ' ws: wss:' : ''),
       "frame-ancestors 'none'",
       "base-uri 'self'",
       "form-action 'self' https://api.jag-cybersecurity.io",
@@ -26,8 +49,8 @@ const nextConfig = {
   trailingSlash: true,
   images: { unoptimized: true },
   reactStrictMode: true,
-  // Note: headers() does not apply to static export output. These are dev-only.
-  // Production headers are set via public/_headers for Cloudflare Pages.
+  // headers() applies in dev / next start; NOT in static export output.
+  // Production policy lives in public/_headers per charter §12.
   async headers() {
     return [{ source: '/(.*)', headers: securityHeaders }];
   },
