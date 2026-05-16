@@ -3,29 +3,42 @@
 import { useEffect, useRef } from 'react';
 
 /**
- * HeroWave — single canvas-rendered wave mesh, scoped to the Hero section.
+ * HeroWave — canvas-rendered audio-waveform-style wave mesh, scoped to
+ * the Hero section.
  *
- * Replaces the full-page WaveBackground that was reported (2026-05-16
- * round 4) as too busy — lines flowing across every section overlapped
- * content and competed for attention.
+ * v6 (2026-05-16 round 6): owner provided 8 new reference frames from the
+ * motionarray Waving Ribbons / Technology Grids family. Common features
+ * across all 8 frames:
+ *   - Wave enters from the LEFT as a single thin horizontal line.
+ *   - Expands rightward into a wide mesh of ~50-80 thin parallel lines.
+ *   - Has localized humps of high amplitude (the "audio" feel) — one
+ *     section peaks high, another stays flat, peaks shift over time.
+ *   - Mesh thickness varies along x: collapsed on the left (single line),
+ *     fully spread on the right (where the action is).
+ *   - Sparkle particles scattered around the wave area.
+ *   - Cyan glow on dark navy.
  *
- * New design, matching owner's reference video (Waving Technology Grids):
- *   - Single horizontal wave band, not full-page scattered lines.
- *   - 70 thin parallel lines clustered in a narrow vertical band (50–95%
- *     of hero height — bottom half only).
- *   - Density + alpha peak at the centre of the band and fade at the
- *     edges, producing a wave-mesh that reads as one structure.
- *   - Lives INSIDE the Hero section (absolute, parent-relative), so
- *     ContentSections (Threats / Pipeline / Architecture / etc.) below
- *     see a plain dark-navy body background. Zero overlap with the
- *     content-heavy parts of the page.
- *   - prefers-reduced-motion: draws a single static frame (lines visible,
- *     no animation). visibilitychange pauses the rAF loop on tab blur.
+ * Implementation:
+ *   1. 80 thin lines, each at a fixed vertical offset (spreadFrac) from
+ *      the band centre. ALL lines coalesce to the same baseY when the
+ *      local envelope is 0 — this produces the single thin line on the
+ *      left. As the envelope grows, each line moves to its allotted
+ *      vertical offset, fanning the mesh open.
+ *   2. envelopeAt(xNorm, time) — sum of three traveling Gaussian peaks
+ *      with morphing positions/widths/heights, gated by a "growth"
+ *      multiplier that's 0 from x=0 to x~0.10 and ramps to 1 by x~0.45.
+ *      The growth multiplier is the "entering from left" effect; the
+ *      Gaussians supply the audio-visualizer dynamics.
+ *   3. 50 particles drift slowly. Alpha modulated by distance from
+ *      band centre AND by local envelope, so particles look like
+ *      "wave debris" — brighter where the wave is loud.
+ *
+ * Charter compliance: prefers-reduced-motion draws a static frame;
+ * visibilitychange pauses rAF; DPR capped at 2.
  */
 
 interface Line {
-  baseFrac: number;
-  amplitude: number;
+  spreadFrac: number; // -0.5 to 0.5 — relative vertical position inside mesh
   frequency: number;
   speed: number;
   phase: number;
@@ -33,54 +46,143 @@ interface Line {
   alpha: number;
 }
 
-const LINE_COUNT = 70;
+interface Particle {
+  x: number; // 0..1 normalized
+  y: number; // 0..1 normalized
+  size: number;
+  alpha: number;
+  driftX: number;
+  driftY: number;
+}
+
+const LINE_COUNT = 80;
+const PARTICLE_COUNT = 55;
+const BAND_CENTER_Y = 0.62;
+const MESH_THICKNESS_FRAC = 0.22; // max vertical fan-out of the mesh (fraction of canvas height)
 
 function makeLines(): Line[] {
   return Array.from({ length: LINE_COUNT }, (_, i) => {
-    const t = i / (LINE_COUNT - 1);
-    // Band spans 50 % → 95 % of canvas height (bottom half of hero).
-    const baseFrac = 0.5 + t * 0.45;
-    // Density/alpha peaks at the centre of the band; fades at edges with
-    // a cosine falloff so the band reads as one cohesive structure.
-    const distFromCenter = Math.abs(t - 0.5) * 2;
-    const alphaFalloff = Math.cos((distFromCenter * Math.PI) / 2);
+    const t = i / (LINE_COUNT - 1) - 0.5; // -0.5 to +0.5
     return {
-      baseFrac,
-      amplitude: 26 + Math.random() * 10,
-      frequency: 360 + Math.random() * 60,
-      speed: 0.00018 + Math.random() * 0.00003,
-      phase: i * 0.04 + Math.random() * 0.15,
-      width: 0.6 + Math.random() * 0.4,
-      alpha: 0.5 * alphaFalloff,
+      spreadFrac: t,
+      frequency: 260 + Math.random() * 80,
+      speed: 0.00018 + Math.random() * 0.00006,
+      phase: i * 0.06 + Math.random() * 0.2,
+      width: 0.4 + Math.random() * 0.4,
+      alpha: 0.3 + Math.random() * 0.35,
     };
   });
+}
+
+function makeParticles(): Particle[] {
+  return Array.from({ length: PARTICLE_COUNT }, () => ({
+    x: Math.random(),
+    y: BAND_CENTER_Y + (Math.random() - 0.5) * 0.28,
+    size: 0.5 + Math.random() * 1.4,
+    alpha: 0.35 + Math.random() * 0.5,
+    driftX: 0.00008 + Math.random() * 0.00018, // drift slowly right
+    driftY: (Math.random() - 0.5) * 0.0001,
+  }));
+}
+
+/**
+ * envelopeAt — returns 0..1 multiplier for amplitude + mesh-spread at
+ * a given normalized x position and time. Composed of:
+ *   - growth: 0 from x∈[0, 0.05], ramps to 1 by x=0.45 (the "entering
+ *     from left" effect)
+ *   - peaks: sum of three Gaussian peaks whose centres, widths, and
+ *     heights morph sinusoidally on different periods so the bursts
+ *     shift without ever exactly repeating
+ */
+function envelopeAt(xNorm: number, time: number): number {
+  const t = time * 0.0003;
+
+  const growth = Math.min(1, Math.max(0, (xNorm - 0.05) / 0.4));
+
+  const p1pos = 0.45 + 0.15 * Math.sin(t * 0.9);
+  const p1w = 0.12 + 0.05 * Math.sin(t * 0.7 + 1);
+  const p1h = 0.65 + 0.35 * Math.sin(t * 0.5 + 2);
+
+  const p2pos = 0.68 + 0.15 * Math.sin(t * 1.1 + 2);
+  const p2w = 0.14 + 0.05 * Math.sin(t * 0.8 + 0.5);
+  const p2h = 0.8 + 0.35 * Math.sin(t * 0.6 + 1.2);
+
+  const p3pos = 0.88 + 0.08 * Math.sin(t * 0.8 + 4);
+  const p3w = 0.09 + 0.03 * Math.sin(t * 1.0);
+  const p3h = 0.55 + 0.4 * Math.sin(t * 0.7 + 3);
+
+  const b1 =
+    Math.max(0, p1h) *
+    Math.exp(-Math.pow((xNorm - p1pos) / Math.max(0.02, p1w), 2));
+  const b2 =
+    Math.max(0, p2h) *
+    Math.exp(-Math.pow((xNorm - p2pos) / Math.max(0.02, p2w), 2));
+  const b3 =
+    Math.max(0, p3h) *
+    Math.exp(-Math.pow((xNorm - p3pos) / Math.max(0.02, p3w), 2));
+
+  return Math.min(1, growth * Math.min(1.15, b1 + b2 + b3));
 }
 
 function drawFrame(
   ctx: CanvasRenderingContext2D,
   lines: Line[],
+  particles: Particle[],
   width: number,
   height: number,
   time: number,
 ) {
   ctx.clearRect(0, 0, width, height);
+
+  const baseY = BAND_CENTER_Y * height;
+  const maxAmplitude = height * 0.14;
+  const meshSpreadPx = height * MESH_THICKNESS_FRAC;
+
+  // ---------- Particles (drawn first, behind the lines) ----------
+  for (const p of particles) {
+    p.x += p.driftX;
+    p.y += p.driftY;
+    if (p.x > 1.05) p.x = -0.05;
+    if (p.x < -0.05) p.x = 1.05;
+    if (p.y > 1) p.y -= 1;
+    if (p.y < 0) p.y += 1;
+
+    const distFromBand = Math.abs(p.y - BAND_CENTER_Y);
+    const bandAlpha = Math.max(0, 1 - distFromBand / 0.18);
+    const env = envelopeAt(p.x, time);
+    const alpha = p.alpha * bandAlpha * (0.15 + 0.85 * env);
+
+    if (alpha > 0.015) {
+      ctx.fillStyle = `rgba(186, 230, 253, ${alpha})`;
+      ctx.beginPath();
+      ctx.arc(p.x * width, p.y * height, p.size, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+
+  // ---------- Wave lines (mesh) ----------
   ctx.lineCap = 'round';
   ctx.lineJoin = 'round';
 
   for (const line of lines) {
-    const baseY = line.baseFrac * height;
     ctx.strokeStyle = `rgba(34, 211, 238, ${line.alpha})`;
     ctx.lineWidth = line.width;
-    ctx.shadowBlur = 14;
-    ctx.shadowColor = `rgba(103, 232, 249, ${Math.min(1, line.alpha * 1.8)})`;
+    ctx.shadowBlur = 10;
+    ctx.shadowColor = `rgba(103, 232, 249, ${Math.min(1, line.alpha * 1.6)})`;
 
     ctx.beginPath();
-    const STEP = 4;
+    const STEP = 3;
     for (let x = -STEP; x <= width + STEP; x += STEP) {
-      const y =
-        baseY +
-        line.amplitude *
-          Math.sin(x / line.frequency + time * line.speed + line.phase);
+      const xNorm = x / width;
+      const env = envelopeAt(xNorm, time);
+      // verticalSpread: when env=0 → 0 (all lines collapsed to baseY);
+      // when env=1 → spreadFrac * meshSpreadPx (lines fanned out).
+      const verticalSpread = line.spreadFrac * meshSpreadPx * env;
+      const oscillation =
+        maxAmplitude *
+        env *
+        Math.sin(x / line.frequency + time * line.speed + line.phase);
+      const y = baseY + verticalSpread + oscillation;
       if (x === -STEP) ctx.moveTo(x, y);
       else ctx.lineTo(x, y);
     }
@@ -106,6 +208,7 @@ export function HeroWave() {
     let width = parent.clientWidth;
     let height = parent.clientHeight;
     const lines = makeLines();
+    const particles = makeParticles();
 
     const resize = () => {
       width = parent.clientWidth;
@@ -115,7 +218,7 @@ export function HeroWave() {
       canvas.style.width = `${width}px`;
       canvas.style.height = `${height}px`;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      drawFrame(ctx, lines, width, height, performance.now());
+      drawFrame(ctx, lines, particles, width, height, performance.now());
     };
     resize();
 
@@ -135,7 +238,7 @@ export function HeroWave() {
 
     let rafId = 0;
     const tick = (time: number) => {
-      if (running) drawFrame(ctx, lines, width, height, time);
+      if (running) drawFrame(ctx, lines, particles, width, height, time);
       rafId = requestAnimationFrame(tick);
     };
     rafId = requestAnimationFrame(tick);
