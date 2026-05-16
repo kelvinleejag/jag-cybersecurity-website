@@ -240,7 +240,7 @@ export const FOOTER = {
 } as const;
 
 export const hero = {
-  eyebrow: 'SOVEREIGN AGENTIC AI · APRIL 2026',
+  eyebrow: 'SOVEREIGN AGENTIC AI',
   headlineLine1: 'Agentic AI Cybersecurity.',
   headlineLine2: 'Runs Entirely On-Device.',
   subhead:
@@ -322,7 +322,7 @@ export const capabilities = {
       { value: 113, suffix: ' claims', label: 'Patent claims filed' },
     ],
     caption:
-      "Validated in controlled red-team exercise — April 2026. Six patents filed under founder's personal name; assignment to JAG Cybersecurity in Q3-Q4 2026.",
+      "Validated in controlled red-team exercise. Six patents filed under founder's personal name; assignment to JAG Cybersecurity in Q3-Q4 2026.",
   },
 } as const;
 
