@@ -27,12 +27,12 @@ export function Hero() {
             </BrandTile>
           </div>
         </FadeInOnScroll>
-        <FadeInOnScroll delay={0.2}>
+        <FadeInOnScroll delay={0.05}>
           <p className="mt-8 font-mono text-eyebrow uppercase tracking-eyebrow text-brand-cyan">
             {hero.eyebrow}
           </p>
         </FadeInOnScroll>
-        <FadeInOnScroll delay={0.4}>
+        <FadeInOnScroll delay={0.1}>
           <h1 className="mt-6 font-display text-displayHero font-semibold text-balance">
             <span className="block text-text-primary">{hero.headlineLine1}</span>
             <span
@@ -46,12 +46,12 @@ export function Hero() {
             </span>
           </h1>
         </FadeInOnScroll>
-        <FadeInOnScroll delay={0.9}>
+        <FadeInOnScroll delay={0.15}>
           <p className="mx-auto mt-8 max-w-[65ch] text-lede text-text-secondary">
             {hero.subhead}
           </p>
         </FadeInOnScroll>
-        <FadeInOnScroll delay={1.1}>
+        <FadeInOnScroll delay={0.2}>
           <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
             <a
               href={hero.ctaPrimary.href}
@@ -67,7 +67,7 @@ export function Hero() {
             </a>
           </div>
         </FadeInOnScroll>
-        <FadeInOnScroll delay={1.3}>
+        <FadeInOnScroll delay={0.25}>
           <p className="mt-14 font-mono text-xs text-text-quaternary flex flex-wrap items-center justify-center gap-x-3 gap-y-1">
             {hero.trust.map((t, i) => (
               <span key={t} className="flex items-center gap-3">
