@@ -1,20 +1,13 @@
 import Image from 'next/image';
 import { FadeInOnScroll } from '@/components/ui/FadeInOnScroll';
-import { BrandTile } from '@/components/ui/BrandTile';
 import { BrowserChrome } from '@/components/ui/BrowserChrome';
 import { SectionAnchor } from '@/components/ui/SectionAnchor';
-import { ConcentricRingsTile } from '@/components/ui/tiles/ConcentricRingsTile';
 import { architecture } from '@/lib/content';
 
 export function Architecture() {
   return (
     <SectionAnchor
       id="architecture"
-      tile={
-        <BrandTile size="md">
-          <ConcentricRingsTile />
-        </BrandTile>
-      }
       eyebrow={architecture.eyebrow}
       headline={architecture.headline}
       lede={architecture.lede}

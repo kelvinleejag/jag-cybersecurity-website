@@ -1,8 +1,6 @@
 import { FadeInOnScroll } from '@/components/ui/FadeInOnScroll';
-import { BrandTile } from '@/components/ui/BrandTile';
 import { BrowserChrome } from '@/components/ui/BrowserChrome';
 import { SectionAnchor } from '@/components/ui/SectionAnchor';
-import { LayerStratigraphyTile } from '@/components/ui/tiles/LayerStratigraphyTile';
 import { LayerCard } from '@/components/ui/LayerCard';
 import { LayerStack } from '@/components/ui/LayerStack';
 import { fiveLayers } from '@/lib/content';
@@ -11,11 +9,6 @@ export function FiveLayers() {
   return (
     <SectionAnchor
       id="five-layers"
-      tile={
-        <BrandTile size="md">
-          <LayerStratigraphyTile />
-        </BrandTile>
-      }
       eyebrow={fiveLayers.eyebrow}
       headline={fiveLayers.headline}
       lede={fiveLayers.lede}

@@ -1,8 +1,6 @@
 import { FadeInOnScroll } from '@/components/ui/FadeInOnScroll';
-import { BrandTile } from '@/components/ui/BrandTile';
 import { BrowserChrome } from '@/components/ui/BrowserChrome';
 import { SectionAnchor } from '@/components/ui/SectionAnchor';
-import { HexWarningTile } from '@/components/ui/tiles/HexWarningTile';
 import { ThreatTimeline } from '@/components/ui/ThreatTimeline';
 import { threatLandscape } from '@/lib/content';
 import { ShieldOff, AlertTriangle, Users, Network, type LucideIcon } from 'lucide-react';
@@ -13,11 +11,6 @@ export function Threats() {
   return (
     <SectionAnchor
       id="threats"
-      tile={
-        <BrandTile size="md">
-          <HexWarningTile />
-        </BrandTile>
-      }
       eyebrow={threatLandscape.eyebrow}
       headline={threatLandscape.headline}
       lede={threatLandscape.lede}
