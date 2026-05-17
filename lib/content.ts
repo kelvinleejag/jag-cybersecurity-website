@@ -246,7 +246,7 @@ export const hero = {
   subhead:
     "JAG is the world's first standalone Agentic AI cybersecurity platform for sovereign and data-sensitive organizations. Every component — threat detection, decision-making, autonomous response, AI validation — runs entirely on the NVIDIA Jetson edge AI platform. No cloud calls. No data exfiltration. No compromise.",
   ctaPrimary: { label: 'Request a Demo', href: '#contact' },
-  ctaSecondary: { label: 'See How It Works', href: '#pipeline' },
+  ctaSecondary: { label: 'See JAG Guardian', href: '#dashboard' },
   trust: ['NVIDIA Jetson Orin NX', 'Air-gap Capable', '6 Patents Pending', 'Sub-5-second Time-to-Block'],
 } as const;
 
@@ -381,7 +381,7 @@ export const architecture = {
   eyebrow: 'ARCHITECTURE',
   headline: 'One Sovereign Device. Five Defense Layers.',
   lede:
-    'JAG sits inline between the untrusted internet and your protected network. Every packet is inspected, classified, and either blocked at the edge or escalated to deeper inference — all on a single NVIDIA Jetson Orin NX.',
+    'JAG sits inline between the untrusted internet and your protected network. Five patented defense layers — Enforce, Understand, Prove, Guard the AI, Adapt — work together inside a single NVIDIA Jetson Orin NX. Every packet inspected, classified, blocked at the edge or escalated to deeper inference.',
   destinations: [
     { icon: 'Monitor', label: 'Workstations' },
     { icon: 'Server', label: 'Servers & IoT' },
@@ -391,6 +391,11 @@ export const architecture = {
   jetsonLayers: ['Edge AI Processing', 'Adaptive Threat Management', 'Intelligent Gateway'],
   caption:
     'All inference, validation, and enforcement happens on the device. Zero cloud round-trips. Zero data exfiltration.',
+  closing: {
+    title: 'A Defensible Moat by Design',
+    body:
+      'Protected under a portfolio of 6 patents · 113 claims. The integrated architecture cannot be replicated without infringing.',
+  },
 } as const;
 
 export const fiveLayers = {
@@ -498,6 +503,25 @@ export const founder = {
   ],
   linkedin: { url: 'https://www.linkedin.com/in/kelvinleeyl/', label: 'Connect on LinkedIn' },
   photo: '/assets/founder-photo.webp',
+} as const;
+
+export const dashboard = {
+  eyebrow: 'GUARDIAN DASHBOARD',
+  headline: 'Defense, in Real Time.',
+  lede:
+    "The operator's view into the JAG defense stack. Every threat detected. Every decision logged. Every AI output validated. Every action sealed.",
+  image: {
+    src: '/assets/guardian-dashboard.webp',
+    alt:
+      'JAG Guardian dashboard: HEALTHY status header, 5-stage threat-decision pipeline (Packet → Guardian → CPU LLM → GPU LLM → Action), AI Analyst sidebar with plain-English explanations, system health telemetry (GPU/CPU temperature, memory, storage), and 24-hour activity counters.',
+    chromeTab: 'jag-guardian.app',
+  },
+  captions: [
+    { label: 'PIPELINE', text: '5-stage decision flow at line rate' },
+    { label: 'AI ANALYST', text: 'Plain-English explanations alongside every decision' },
+    { label: 'SYSTEM HEALTH', text: 'Live on-device telemetry — temp, memory, throughput' },
+    { label: 'EVIDENCE', text: 'Every action sealed to a tamper-evident ledger' },
+  ],
 } as const;
 
 export const contactSection = {
