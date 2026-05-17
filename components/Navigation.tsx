@@ -85,7 +85,7 @@ export default function Navigation() {
         <nav className="mx-auto flex max-w-container items-center justify-between px-gutter py-4">
           <Link href="/" aria-label="JAG Cybersecurity — home" className="flex items-center">
             <Image
-              src="/assets/jag-logo.png"
+              src="/assets/jag-logo.webp"
               alt="JAG Cybersecurity"
               width={64}
               height={70}
@@ -135,7 +135,7 @@ export default function Navigation() {
       >
         <div className="flex items-center justify-between px-gutter py-4 border-b border-border-default">
           <Image
-            src="/assets/jag-logo.png"
+            src="/assets/jag-logo.webp"
             alt="JAG Cybersecurity"
             width={64}
             height={70}

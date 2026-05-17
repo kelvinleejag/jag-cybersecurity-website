@@ -43,7 +43,7 @@ export default function Footer() {
           <div className="md:col-span-1">
             <Link href="/" aria-label="JAG Cybersecurity — home" className="inline-flex items-center">
               <Image
-                src="/assets/jag-logo.png"
+                src="/assets/jag-logo.webp"
                 alt="JAG Cybersecurity"
                 width={96}
                 height={105}

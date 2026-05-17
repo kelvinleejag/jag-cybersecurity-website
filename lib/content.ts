@@ -497,7 +497,7 @@ export const founder = {
     'JAG represents over 12 months of dedicated engineering work, resulting in a production-validated platform tested in controlled red-team exercises.',
   ],
   linkedin: { url: 'https://www.linkedin.com/in/kelvinleeyl/', label: 'Connect on LinkedIn' },
-  photo: '/assets/founder-photo.png',
+  photo: '/assets/founder-photo.webp',
 } as const;
 
 export const contactSection = {

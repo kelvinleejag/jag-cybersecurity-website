@@ -21,7 +21,7 @@ export function Architecture() {
     >
       <BrowserChrome tab="architecture-overview.svg">
         <Image
-          src="/assets/architecture-overview.png"
+          src="/assets/architecture-overview.webp"
           alt="JAG Agentic AI Cybersecurity Gateway architecture: untrusted internet on the left connects via wired or wireless to the central JAG-powered NVIDIA Jetson Orin NX module — running Edge AI Processing, Adaptive Threat Management, and Intelligent Gateway layers — which then secures workstations, IoT systems, IP surveillance, and industrial control/SCADA/PLC devices on the internal network."
           width={1920}
           height={1080}
