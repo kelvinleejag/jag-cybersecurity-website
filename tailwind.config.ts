@@ -71,7 +71,7 @@ const config: Config = {
         content: '720px',
         narrow: '960px',
         anchor: '720px',
-        'anchor-tight': '620px',
+        anchorTight: '620px',
       },
       spacing: {
         section: 'clamp(5rem, 4rem + 5vw, 9rem)',
@@ -101,7 +101,7 @@ const config: Config = {
         'glow-xl': '0 0 72px rgba(34, 211, 238, 0.25)',
         cardHover: '0 0 0 1px rgba(34, 211, 238, 0.2), 0 20px 40px -20px rgba(34, 211, 238, 0.15)',
         tile:       '0 0 32px 0 rgba(34, 211, 238, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.06)',
-        'tile-hover': '0 0 48px 0 rgba(34, 211, 238, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.08)',
+        tileHover:  '0 0 48px 0 rgba(34, 211, 238, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.08)',
       },
       transitionTimingFunction: {
         standard: 'cubic-bezier(0.22, 1, 0.36, 1)',
