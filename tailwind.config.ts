@@ -61,12 +61,17 @@ const config: Config = {
         h2: ['clamp(2rem, 1.6rem + 2vw, 3.25rem)', { lineHeight: '1.15', letterSpacing: '-0.02em' }],
         h1: ['clamp(2.75rem, 2rem + 3.75vw, 5.5rem)', { lineHeight: '1.05', letterSpacing: '-0.03em' }],
         hero: ['clamp(3.5rem, 2.5rem + 5vw, 7.5rem)', { lineHeight: '1.02', letterSpacing: '-0.03em' }],
+        displayHero:   ['clamp(4rem, 3rem + 5vw, 7rem)',      { lineHeight: '0.95', letterSpacing: '-0.04em' }],
+        displayAnchor: ['clamp(3rem, 2.25rem + 3.75vw, 5rem)', { lineHeight: '1.0',  letterSpacing: '-0.035em' }],
+        lede:          ['clamp(1.125rem, 1rem + 0.625vw, 1.375rem)', { lineHeight: '1.5', letterSpacing: '-0.005em' }],
       },
       maxWidth: {
         container: '1280px',
         containerWide: '1280px',
         content: '720px',
         narrow: '960px',
+        anchor: '720px',
+        'anchor-tight': '620px',
       },
       spacing: {
         section: 'clamp(5rem, 4rem + 5vw, 9rem)',
@@ -95,6 +100,8 @@ const config: Config = {
         'glow-lg': '0 0 60px rgba(34, 211, 238, 0.12)',
         'glow-xl': '0 0 72px rgba(34, 211, 238, 0.25)',
         cardHover: '0 0 0 1px rgba(34, 211, 238, 0.2), 0 20px 40px -20px rgba(34, 211, 238, 0.15)',
+        tile:       '0 0 32px 0 rgba(34, 211, 238, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.06)',
+        'tile-hover': '0 0 48px 0 rgba(34, 211, 238, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.08)',
       },
       transitionTimingFunction: {
         standard: 'cubic-bezier(0.22, 1, 0.36, 1)',
