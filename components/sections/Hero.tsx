@@ -1,5 +1,6 @@
 import FadeInOnScroll from '@/components/ui/FadeInOnScroll';
-import ShieldSVG from '@/components/ui/ShieldSVG';
+import { BrandTile } from '@/components/ui/BrandTile';
+import { ShieldTile } from '@/components/ui/tiles/ShieldTile';
 import { HeroWave } from '@/components/ui/HeroWave';
 import { hero } from '@/lib/content';
 
@@ -18,20 +19,21 @@ export function Hero() {
         }}
         aria-hidden="true"
       />
-      <div
-        className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 opacity-30 animate-pulse-glow"
-        style={{ animationDelay: '1200ms' }}
-      >
-        <ShieldSVG animate size={560} />
-      </div>
-      <div className="relative mx-auto max-w-container text-center">
+      <div className="relative mx-auto max-w-anchor text-center">
+        <FadeInOnScroll>
+          <div className="flex justify-center">
+            <BrandTile size="lg">
+              <ShieldTile />
+            </BrandTile>
+          </div>
+        </FadeInOnScroll>
         <FadeInOnScroll delay={0.2}>
-          <p className="font-mono text-eyebrow uppercase tracking-eyebrow text-brand-cyan">
+          <p className="mt-8 font-mono text-eyebrow uppercase tracking-eyebrow text-brand-cyan">
             {hero.eyebrow}
           </p>
         </FadeInOnScroll>
         <FadeInOnScroll delay={0.4}>
-          <h1 className="mt-6 font-display text-hero font-semibold leading-display tracking-display text-balance">
+          <h1 className="mt-6 font-display text-displayHero font-semibold text-balance">
             <span className="block text-text-primary">{hero.headlineLine1}</span>
             <span
               className="block bg-clip-text text-transparent"
@@ -45,7 +47,7 @@ export function Hero() {
           </h1>
         </FadeInOnScroll>
         <FadeInOnScroll delay={0.9}>
-          <p className="mx-auto mt-8 max-w-[65ch] text-bodyLg text-text-secondary">
+          <p className="mx-auto mt-8 max-w-[65ch] text-lede text-text-secondary">
             {hero.subhead}
           </p>
         </FadeInOnScroll>
