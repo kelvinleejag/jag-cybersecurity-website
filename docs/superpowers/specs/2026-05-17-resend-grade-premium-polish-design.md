@@ -95,7 +95,7 @@ Replaces ad-hoc opener markup currently scattered across the 5 anchor sections.
 - **Cyan-glow inner backdrop:** existing `animate-glow-bloom` ellipse stays
 - **Pulse-glow:** removed (the tile carries the inner light now; doubling it competes)
 
-### 5.2 Threats (`components/sections/ThreatLandscape.tsx`)
+### 5.2 Threats (`components/sections/Threats.tsx`)
 
 - **Tile:** new custom SVG, "hexagonal warning with cyan core". 128px `BrandTile size="md"`
 - **Anchor wrap:** opener wrapped in `<SectionAnchor>` with tile + eyebrow + headline + lede
@@ -228,7 +228,7 @@ Additional verification:
 - Brainstorming source: 2026-05-17 session (Resend reference frames provided by owner)
 - Charter: `CLAUDE.md` v2.1, sections §3 (craft benchmarks), §11 (design intent), §11.2 (anti-pattern catalogue)
 - Phase 2 baseline spec: `docs/superpowers/specs/2026-05-15-website-rebuild-phase2-design.md`
-- Components to be modified: `components/sections/Hero.tsx`, `ThreatLandscape.tsx`, `Architecture.tsx`, `FiveLayers.tsx`, `Founder.tsx`
+- Components to be modified: `components/sections/Hero.tsx`, `Threats.tsx`, `Architecture.tsx`, `FiveLayers.tsx`, `Founder.tsx`
 - Components to be created: `components/ui/BrandTile.tsx`, `BrowserChrome.tsx`, `SectionAnchor.tsx`, `components/ui/tiles/*.tsx`
 - Config: `tailwind.config.ts` (fontSize, maxWidth, boxShadow extensions)
 - Tests to be updated: `tests/visual-rebuild.spec.ts` (new visual baseline)

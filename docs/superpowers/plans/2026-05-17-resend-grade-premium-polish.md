@@ -102,7 +102,7 @@ Locate the `maxWidth` block. **Append** these two lines inside it:
 
 ```ts
         anchor: '720px',
-        'anchor-tight': '620px',
+        anchorTight: '620px',
 ```
 
 - [ ] **Step 3: Add `boxShadow` tokens for the brand tile**
@@ -110,8 +110,8 @@ Locate the `maxWidth` block. **Append** these two lines inside it:
 Locate the `boxShadow` block. **Append** these two lines inside it:
 
 ```ts
-        tile:       '0 0 32px 0 rgba(34, 211, 238, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.06)',
-        'tile-hover': '0 0 48px 0 rgba(34, 211, 238, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.08)',
+        tile:      '0 0 32px 0 rgba(34, 211, 238, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.06)',
+        tileHover: '0 0 48px 0 rgba(34, 211, 238, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.08)',
 ```
 
 - [ ] **Step 4: Verify typecheck + build**
@@ -478,19 +478,19 @@ export function ShieldTile() {
       aria-hidden="true"
     >
       <defs>
-        <linearGradient id="shield-fill" x1="0" y1="0" x2="0" y2="1">
+        <linearGradient id="shield-tile-fill" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stopColor="#67E8F9" stopOpacity="0.16" />
           <stop offset="100%" stopColor="#22D3EE" stopOpacity="0.04" />
         </linearGradient>
-        <linearGradient id="shield-stroke" x1="0" y1="0" x2="1" y2="1">
+        <linearGradient id="shield-tile-stroke" x1="0" y1="0" x2="1" y2="1">
           <stop offset="0%" stopColor="#A5F3FC" />
           <stop offset="100%" stopColor="#22D3EE" />
         </linearGradient>
       </defs>
       <path
         d="M32 4 L56 12 V32 C56 46 46 56 32 60 C18 56 8 46 8 32 V12 L32 4 Z"
-        fill="url(#shield-fill)"
-        stroke="url(#shield-stroke)"
+        fill="url(#shield-tile-fill)"
+        stroke="url(#shield-tile-stroke)"
         strokeWidth="1.5"
         strokeLinejoin="round"
       />
