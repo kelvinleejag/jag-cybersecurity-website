@@ -14,19 +14,19 @@ export function ShieldTile() {
       aria-hidden="true"
     >
       <defs>
-        <linearGradient id="shield-fill" x1="0" y1="0" x2="0" y2="1">
+        <linearGradient id="shield-tile-fill" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stopColor="#67E8F9" stopOpacity="0.16" />
           <stop offset="100%" stopColor="#22D3EE" stopOpacity="0.04" />
         </linearGradient>
-        <linearGradient id="shield-stroke" x1="0" y1="0" x2="1" y2="1">
+        <linearGradient id="shield-tile-stroke" x1="0" y1="0" x2="1" y2="1">
           <stop offset="0%" stopColor="#A5F3FC" />
           <stop offset="100%" stopColor="#22D3EE" />
         </linearGradient>
       </defs>
       <path
         d="M32 4 L56 12 V32 C56 46 46 56 32 60 C18 56 8 46 8 32 V12 L32 4 Z"
-        fill="url(#shield-fill)"
-        stroke="url(#shield-stroke)"
+        fill="url(#shield-tile-fill)"
+        stroke="url(#shield-tile-stroke)"
         strokeWidth="1.5"
         strokeLinejoin="round"
       />
