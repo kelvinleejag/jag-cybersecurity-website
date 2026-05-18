@@ -313,68 +313,6 @@ export const capabilities = {
       icon: 'Lock',
     },
   ],
-  proofBar: {
-    stats: [
-      { value: 10, suffix: '/10', label: 'Attack types blocked' },
-      { value: 5, suffix: ' sec', label: 'Time-to-block' },
-      { value: 0, suffix: '%', label: 'False positive rate' },
-      { value: 310, suffix: '/310', label: 'Unit tests passing' },
-      { value: 113, suffix: ' claims', label: 'Patent claims filed' },
-    ],
-    caption:
-      "Validated in controlled red-team exercise. Six patents filed under founder's personal name; assignment to JAG Cybersecurity in Q3-Q4 2026.",
-  },
-} as const;
-
-export const pipeline = {
-  eyebrow: 'HOW IT WORKS',
-  headline: 'Five-Stage Tiered Inference Pipeline.',
-  lede:
-    "JAG's patented architecture routes every packet through five escalating inference tiers — fast decisions at the edge, deep analysis where it matters.",
-  stages: [
-    {
-      step: '01',
-      title: 'Inspect',
-      tagline: 'Watches every packet',
-      detail:
-        'Wire-speed inspection of network packets. Kernel-level visibility before any rule fires.',
-      tone: 'cyanDeep',
-    },
-    {
-      step: '02',
-      title: 'Block',
-      tagline: 'Stops known bad traffic',
-      detail:
-        'iptables/ipset enforcement at line rate. Known signatures and protocol violations dropped immediately.',
-      tone: 'cyanDeep',
-    },
-    {
-      step: '03',
-      title: 'Quick Think',
-      tagline: 'Fast on-device AI checks suspicious traffic',
-      detail:
-        'Lightweight CPU-tier classifier resolves ambiguous traffic in sub-second. Most ambiguity ends here.',
-      tone: 'cyan',
-    },
-    {
-      step: '04',
-      title: 'Deep Think',
-      tagline: 'Foundation-Sec-8B reasons through the trickiest cases',
-      detail:
-        'GPU-accelerated cybersecurity-specialized LLM. Reasons about novel attack patterns, social engineering, multi-stage intrusions.',
-      tone: 'cyanBright',
-    },
-    {
-      step: '05',
-      title: 'Act',
-      tagline: 'Takes action, alerts, seals the proof',
-      detail:
-        'Autonomous block / quarantine / alert / escalate. Cryptographic evidence bundle written to tamper-evident ledger.',
-      tone: 'cyanBright',
-    },
-  ],
-  caption:
-    'Most threats are stopped at the gate (01-02). Only the suspicious reach Quick Think (03). Only the trickiest reach Deep Think (04). The right amount of brainpower for every threat.',
 } as const;
 
 export const architecture = {
@@ -391,65 +329,6 @@ export const architecture = {
   jetsonLayers: ['Edge AI Processing', 'Adaptive Threat Management', 'Intelligent Gateway'],
   caption:
     'All inference, validation, and enforcement happens on the device. Zero cloud round-trips. Zero data exfiltration.',
-  closing: {
-    title: 'A Defensible Moat by Design',
-    body:
-      'Protected under a portfolio of 6 patents · 113 claims. The integrated architecture cannot be replicated without infringing.',
-  },
-} as const;
-
-export const fiveLayers = {
-  eyebrow: 'THE FIVE LAYERS',
-  headline: 'Five Patented Inventions. One Unified Ecosystem.',
-  lede:
-    "JAG isn't a single tool — it's five integrated defense layers, each a patented invention, working together inside one sovereign device.",
-  layers: [
-    {
-      step: '01',
-      title: 'Enforce',
-      subtitle: 'The Front Gate',
-      body:
-        'Kernel-level packet inspection paired with iptables/ipset enforcement at line rate. Known signatures and protocol violations are dropped before any AI tier sees them. The cheapest decision is the one made first.',
-      quote:
-        'Stops the obvious bad guys at the door — so the rest of the system never has to deal with them.',
-    },
-    {
-      step: '02',
-      title: 'Understand',
-      subtitle: 'The On-Device Brain',
-      body:
-        'A cybersecurity-specialized LLM (Foundation-Sec-8B class) runs on the Jetson Orin NX GPU. It reasons about novel attack patterns, multi-stage intrusions, and social engineering — and emits a human-readable explanation alongside every decision.',
-      quote:
-        'A specialist AI that figures out what the attacker is up to — and explains it in words humans can read.',
-    },
-    {
-      step: '03',
-      title: 'Prove',
-      subtitle: 'The Tamper-Proof Logbook',
-      body:
-        'Every decision, every enforcement action, every model output is sealed into a cryptographic evidence bundle and written to a tamper-evident ledger. Auditors and regulators get a chain of custody that holds up under scrutiny.',
-      quote:
-        'An unbreakable record of every decision — auditors, regulators, and courts can trust it.',
-    },
-    {
-      step: '04',
-      title: 'Guard the AI',
-      subtitle: 'The AI That Watches the AI',
-      body:
-        'A second validation model runs adversarial checks against the primary AI: hallucination detection, prompt-injection probes, output-grounding verification. If the validator disagrees, no enforcement fires. The AI is never alone with the gun.',
-      quote:
-        'A second AI keeps the first one honest — so a tricked or hallucinating AI never gets to take action.',
-    },
-    {
-      step: '05',
-      title: 'Adapt',
-      subtitle: 'The Self-Improving Loop',
-      body:
-        'Every attack JAG sees becomes training signal for the on-device classifier. Updates are staged, validated against the proof ledger, and reviewed by a human operator before they go live. The system learns; the human approves.',
-      quote:
-        'JAG gets smarter with every attack it sees — but a human always has the final say before anything goes live.',
-    },
-  ],
   closing: {
     title: 'A Defensible Moat by Design',
     body:
