@@ -43,7 +43,7 @@ export function Hero() {
           </p>
         </FadeInOnScroll>
         <FadeInOnScroll delay={0.15}>
-          <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center items-center">
             <a
               href={hero.ctaPrimary.href}
               className="inline-flex items-center justify-center rounded-md bg-brand-cyan px-7 py-3 text-base font-semibold text-text-onAccent hover:bg-brand-cyanBright active:scale-[0.97] transition-all duration-fast"
