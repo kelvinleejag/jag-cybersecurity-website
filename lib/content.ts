@@ -380,7 +380,7 @@ export const founder = {
     "With deep expertise spanning edge computing, AI systems architecture, and cybersecurity engineering, Kelvin personally designed and implemented JAG's full stack: from kernel-level network inspection through GPU-accelerated AI inference and autonomous response orchestration.",
     'JAG represents over 12 months of dedicated engineering work, resulting in a production-validated platform tested in controlled red-team exercises.',
   ],
-  linkedin: { url: 'https://www.linkedin.com/in/kelvinleeyl/', label: 'Connect on LinkedIn' },
+  linkedin: { url: 'https://www.linkedin.com/in/kelvin-lee-64942750/?locale=en', label: 'Connect on LinkedIn' },
   photo: '/assets/founder-photo.webp',
 } as const;
 
@@ -413,6 +413,6 @@ export const contactSection = {
   direct: [
     { label: 'GENERAL INQUIRIES', value: 'jag@jag-cybersecurity.io', icon: 'Mail', href: 'mailto:jag@jag-cybersecurity.io' },
     { label: 'FOUNDER DIRECT', value: 'kelvin@jag-cybersecurity.io', icon: 'User', href: 'mailto:kelvin@jag-cybersecurity.io' },
-    { label: 'LINKEDIN', value: 'JAG Cybersecurity', icon: 'Linkedin', href: 'https://www.linkedin.com/company/jag-cybersecurity/' },
+    { label: 'LINKEDIN', value: 'JAG Cybersecurity', icon: 'Linkedin', href: 'https://www.linkedin.com/company/117664215/' },
   ],
 } as const;
