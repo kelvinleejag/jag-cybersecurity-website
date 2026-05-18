@@ -7,13 +7,12 @@ const COLS = [
     links: [
       { href: '#threats', label: 'Threat Landscape' },
       { href: '#solution', label: 'Capabilities' },
-      { href: '#five-layers', label: 'Five Layers' },
+      { href: '#dashboard', label: 'Guardian Dashboard' },
     ],
   },
   {
     title: 'Technology',
     links: [
-      { href: '#pipeline', label: 'Pipeline' },
       { href: '#architecture', label: 'Architecture' },
       { href: '#technology', label: 'Standards' },
     ],
