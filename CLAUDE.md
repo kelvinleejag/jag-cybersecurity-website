@@ -5,16 +5,16 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ---
 doc_id: CLAUDE-CODE-CHARTER-JAG-WEBSITE
 title: Claude Code Operating Charter — World-Class Web Design Edition
-version: 2.1
+version: 2.2
 status: ACTIVE
 owner: Kelvin Lee
 effective_date: 2026-05-15
-last_amended: 2026-05-15 (v2.1 — website rebuild Phase 2 landed; closes WEB-TASK-A/B/C and Phase 1.5 gaps #1-#6)
-supersedes: v2.0 (2026-05-15 structural §0 routing change)
+last_amended: 2026-05-18 (v2.2 — homepage restructure + Guardian Dashboard section; 10 → 9 sections; BrandTile experiment retired; First Load JS baseline 96.9 → 96.5 kB; WEB-DEFECT-20260518-001 filed)
+supersedes: v2.1 (2026-05-15 Phase 2 rebuild)
 project: JAG Cybersecurity — Marketing Website (Phase 1)
 project_root: /Users/cavslee/Projects/JAG/01_website
 canonical_path: ./CLAUDE.md
-sha256_body: 36946f3f4bae5529da44deb15c23a242b410f74044f2d729e776454dabe952eb
+sha256_body: 01b9e92a010c2e175977abda3268350705dd8b9085d9fd6fc7b534201c3378cc
 sha256_canonical_cmd: tail -n +<frontmatter_end_line+1> ./CLAUDE.md | shasum -a 256
 review_cadence: monthly OR upon any LESSON-LEARNED addition
 host: MacBook Air (Apple Silicon) — cavslee@Kelvins-MacBook-Air
@@ -298,7 +298,7 @@ A response is not complete unless these are satisfied for the work in scope.
 - Exit faster than enter. Gate hover effects behind `@media (hover: hover) and (pointer: fine)`. Stagger list entries 30–80 ms apart.
 - `prefers-reduced-motion` means *fewer and gentler*, not zero — keep opacity / colour transitions that aid comprehension, drop movement.
 
-**Keyframes-vs-transitions note (project-specific):** the source skill prefers CSS *transitions* over *keyframes* for rapidly re-triggered UI (keyframes restart from zero on interrupt). This does **not** contradict `FadeInOnScroll` / `MetricCounter`, which use CSS keyframes deliberately — those are one-shot scroll reveals, never rapidly re-triggered, so keyframes are correct there. Do not "fix" them. The skill's broader conclusion — *CSS animations run off the main thread; JS motion libraries drop frames under load* — independently confirms the commit `6c2f230` framer-motion removal (§12).
+**Keyframes-vs-transitions note (project-specific):** the source skill prefers CSS *transitions* over *keyframes* for rapidly re-triggered UI (keyframes restart from zero on interrupt). This does **not** contradict `FadeInOnScroll`, which uses CSS keyframes deliberately — it is a one-shot scroll reveal, never rapidly re-triggered, so keyframes are correct there. Do not "fix" it. The skill's broader conclusion — *CSS animations run off the main thread; JS motion libraries drop frames under load* — independently confirms the commit `6c2f230` framer-motion removal (§12). *(MetricCounter, the original sibling component built on the same pattern, was deleted in v2.2 alongside ProofBar — see §12.)*
 
 ### 3.3 Accessibility (WCAG 2.2 AA minimum)
 - Semantic HTML first; ARIA only where needed
@@ -309,7 +309,7 @@ A response is not complete unless these are satisfied for the work in scope.
 
 ### 3.4 Performance Budgets
 - LCP <2.5s · INP <200ms · CLS <0.1 on mid-tier mobile (4G throttle)
-- **Project baseline (do not regress):** First Load JS for `/` is 96.9 kB; page-specific JS is 4.4 kB (post-rebuild Phase 2 baseline). Any change pushing First Load JS above 100 kB requires written justification.
+- **Project baseline (do not regress):** First Load JS for `/` is 96.5 kB; page-specific JS is 3.98 kB (post-v2.2 baseline; 2026-05-18). Any change pushing First Load JS above 100 kB requires written justification.
 - Initial JS bundle <170 kB gzipped per route (project current is well under)
 - **JAG-specific Lighthouse SLA: Performance / A11y / Best-Practices / SEO ≥95** — enforced by `@lhci/cli` (`lighthouserc.json`). Lighthouse Performance <95 is a §8 hard-stop for production deploy.
 - Image strategy: responsive `srcset`, modern formats (AVIF/WebP), lazy below fold. Note `next.config.mjs` sets `images: { unoptimized: true }` because of static export — handle responsiveness manually.
@@ -679,7 +679,7 @@ Source: `pbakaus/impeccable`. The Impeccable catalogue was diffed against this c
 **Adopted — AI "tells" to avoid:**
 - `side-tab` — thick coloured stripe down one side of a rounded card ("the single most recognisable tell of AI-generated UI")
 - `border-accent-on-rounded` — thick coloured border fighting a large radius
-- `icon-tile-stack` — rounded gradient icon tile stacked above a heading
+- `icon-tile-stack` — rounded gradient icon tile stacked above a heading. *Empirically confirmed for JAG (2026-05-17): the BrandTile experiment — four cyan glass-tile icons crafted with charter discipline and brand alignment — was rejected by owner local review ("the icons are unimpressive, I don't see the value"). The anti-pattern fails even when executed with intent, not just as a lazy default.*
 - `nested-cards` / cards-around-everything — group with spacing + alignment, not bordered containers
 - `identical-card-grids` — the same icon + heading + text card repeated; the default AI homepage
 - `hero-metric-layout` — big number / small label / three supporting stats / gradient accent
@@ -709,7 +709,7 @@ The lesson: a generic taste skill cannot distinguish an intentional brand choice
 
 ### High-level architecture
 
-Single-route Next.js 14 App Router site (`app/page.tsx` is the only marketing page; `app/layout.tsx` mounts metadata, fonts, the `Navigation` and `Footer`). The page composes 10 section components from `components/sections/` in narrative order: Hero → Threats (ThreatLandscape) → Solution (Capabilities + ProofBar) → Pipeline → Architecture (NEW) → FiveLayers (NEW) → Technology (Standards) → Markets → Founder → Contact. All sections pull copy from `lib/content.ts` (the single source of truth for marketing strings) and visuals from Tailwind tokens defined in `tailwind.config.ts`.
+Single-route Next.js 14 App Router site (`app/page.tsx` is the only marketing page; `app/layout.tsx` mounts metadata, fonts, the `Navigation` and `Footer`). The page composes **9 section components** from `components/sections/` in narrative order: Hero → Threats → Solution → Architecture (combined with former FiveLayers content as of v2.2) → Dashboard → Technology → Markets → Founder → Contact. All sections pull copy from `lib/content.ts` (the single source of truth for marketing strings) and visuals from Tailwind tokens defined in `tailwind.config.ts`.
 
 Output is a fully static export (`output: 'export'`) deployed to Cloudflare Pages at `jag-cybersecurity.io`. There is **no Node runtime at request time** — every page is prerendered to `out/` and served from the edge. This is why `next.config.mjs` `images: { unoptimized: true }` is set and why the live security policy lives in `public/_headers`, not `next.config.mjs`'s `headers()` (which only applies in `next dev` / `next start`).
 
@@ -723,57 +723,88 @@ These **must stay in sync by value**. A change to one without the other ships a 
 
 ### Animation architecture (load-bearing decision)
 
-`components/ui/FadeInOnScroll.tsx` and `components/ui/MetricCounter.tsx` were intentionally rewritten in Phase 1 to remove `framer-motion`. The replacement uses pure CSS keyframes (`animate-fade-in-up` Tailwind utility, defined in `tailwind.config.ts`) and a native `IntersectionObserver` with a 1500 ms `setTimeout` fallback. The fallback is dual-signal and idempotent — it exists because `framer-motion`'s `useInView` failed silently in Next.js 14 SSR + React 18 Strict Mode, leaving sections permanently invisible. **Bundle impact of the refactor: −36.3 kB First Load JS, −89.3 % page-specific JS.** Rationale and verification evidence live in commit `6c2f230` and `docs/superpowers/specs/2026-04-25-fade-animation-css-refactor-design.md`. Do not reintroduce `framer-motion` on the `/` route without a written justification approved by the owner.
+`components/ui/FadeInOnScroll.tsx` was intentionally rewritten in Phase 1 to remove `framer-motion`. The replacement uses pure CSS keyframes (`animate-fade-in-up` Tailwind utility, defined in `tailwind.config.ts`) and a native `IntersectionObserver` with a 1500 ms `setTimeout` fallback. The fallback is dual-signal and idempotent — it exists because `framer-motion`'s `useInView` failed silently in Next.js 14 SSR + React 18 Strict Mode, leaving sections permanently invisible. **Bundle impact of the refactor: −36.3 kB First Load JS, −89.3 % page-specific JS.** Rationale and verification evidence live in commit `6c2f230` and `docs/superpowers/specs/2026-04-25-fade-animation-css-refactor-design.md`. Do not reintroduce `framer-motion` on the `/` route without a written justification approved by the owner. *(Companion `MetricCounter.tsx`, originally part of the same CSS-keyframe refactor, was deleted in v2.2 alongside ProofBar — see "v2.2 changes" below.)*
+
+`components/ui/HeroWave.tsx` is the one canvas-rendered motion element retained on `/`. **Known performance issue:** continuous `requestAnimationFrame` while the tab is visible blocks the main thread (PSI 2026-05-18: TBT 8,100-8,400 ms; mobile Perf 53, desktop Perf 60 — vs the §3.4 ≥95 SLA). Owner accepted via §1.7 escape valve. Tracked as **`WEB-DEFECT-20260518-001`**; deadline 2026-06-17. Fix recipe documented in defect: IntersectionObserver pause-on-scroll + 30 fps throttle + reduce 80→50 lines and 55→35 particles.
 
 ### Content separation
 
-`lib/content.ts` is a typed export and the only place marketing copy lives. Sections import named string keys from it. To edit visible text: open `lib/content.ts`, change the string, save — TypeScript will flag any consumer that referenced a removed/renamed key at compile time.
+`lib/content.ts` is a typed export and the only place marketing copy lives. Sections import named string keys from it. To edit visible text: open `lib/content.ts`, change the string, save — TypeScript will flag any consumer that referenced a removed/renamed key at compile time. Post-v2.2: the `pipeline` export, `fiveLayers` export, and `capabilities.proofBar` field are removed.
 
-### Phase 1 gaps — ALL RESOLVED in v2.1 (website rebuild Phase 2, commits 01128ad..0b646b8)
+### v2.2 changes (homepage restructure + Guardian Dashboard, 2026-05-18, commits `0a7c04d..3e7f2cc`)
 
-1. ✅ Section fade-in completes faster than perceptible — RESOLVED. FadeInOnScroll extended with `delay` prop (seconds API, back-compat with legacy sections); staggered reveals across Hero / Threats / Capabilities / Pipeline / Architecture / FiveLayers / Markets.
-2. ✅ JAG logo placeholder — RESOLVED. Real logo at `public/assets/jag-logo.png`, 473×512, 151 KB after sharp downscale.
-3. ✅ Founder photo placeholder — RESOLVED. Real photo at `public/assets/founder-photo.png`, 553×553, 445 KB.
-4. ✅ OG image — RESOLVED. Build-time generation via `scripts/og-build.mjs` using `@vercel/og`; output at `public/og.png`, 1200×630, 62 KB. Wired into `npm run build`.
+1. **New section: Guardian Dashboard (`components/sections/Dashboard.tsx`).** Showcases the actual JAG Guardian product UI via a chrome-framed `public/assets/guardian-dashboard.webp` plus 4 caption blocks (PIPELINE / AI ANALYST / SYSTEM HEALTH / EVIDENCE). Located between Architecture and Technology. Anchor `#dashboard`. Dashboard image enhanced with sharp filter pipeline (linear contrast + saturation boost + edge sharpening, quality 88).
+2. **Architecture absorbed FiveLayers.** The section now renders both the outside view (`architecture-overview.webp` diagram showing network positioning) AND the inside view (`LayerStack` stratigraphy showing 5 defense layers within the device), plus the "A Defensible Moat by Design" closing block. Anchor `#architecture` preserved; `#five-layers` retired.
+3. **Sections / components removed:** Pipeline section entirely; ProofBar stat band (from Solution); 5 LayerCard grid (from former FiveLayers); 4 BrandTile icons + 4 tile SVG components (the 2026-05-17 polish experiment — see §11.2 `icon-tile-stack` empirical confirmation).
+4. **Section count: 10 → 9.**
+5. **Hero CTA secondary:** "See How It Works" → "See JAG Guardian"; href `#pipeline` → `#dashboard`.
+6. **Hero animation stagger** tightened from `{0, 0.2, 0.4, 0.9, 1.1, 1.3}s` to `{0, 0.05, 0.1, 0.15, 0.2}s` — eyebrow paints immediately. Aligns with §3.2.1 *"never delay the moment the user is watching most"*.
+7. **Navigation:** added `#dashboard → Guardian` link (4 → 5 links); fixed pre-existing bug where the `Technology` label was hardcoded to `#pipeline` (now correctly `#technology`).
+8. **Footer:** Solution column row updated `Five Layers → Guardian Dashboard`; Technology column dropped the Pipeline row (3 → 2 rows).
+9. **Image optimization (cumulative across 2026-05-17 + 2026-05-18 perf passes):** all marketing images now WebP via sharp (logo, founder photo, architecture-overview, guardian-dashboard). Total payload reduced ~1.2 MB across all marketing PNG → WebP conversions. Pattern: sharp WebP quality 85 baseline; quality 88 for the contrast-enhanced dashboard.
+10. **First Load JS baseline:** 96.9 kB → **96.5 kB**.
+
+### Phase 1 + Phase 1.5 gap resolution (historical — closed by v2.1)
+
+1. ✅ Section fade-in completes faster than perceptible — RESOLVED. FadeInOnScroll extended with `delay` prop.
+2. ✅ JAG logo placeholder — RESOLVED. Real logo at `public/assets/jag-logo.webp` (WebP since v2.2 perf pass; was PNG before).
+3. ✅ Founder photo placeholder — RESOLVED. Real photo at `public/assets/founder-photo.webp` (WebP since v2.2 perf pass).
+4. ✅ OG image — RESOLVED. Build-time generation via `scripts/og-build.mjs` using `@vercel/og`; output at `public/og.png`, 1200×630.
 5. ✅ Compliance badges restyled — RESOLVED. 11-framework pill grid in Standards (Technology.tsx); no fake certifications, caption notes formal certs in roadmap.
-6. ✅ framer-motion in package.json — RESOLVED. Uninstalled in v2.1 after `rg "framer-motion" app/ components/` returned zero. Runtime dep count: 5 → 6 (added geist), net unchanged from charter §11.1 budget posture relative to v2.0 with framer.
+6. ✅ framer-motion in package.json — RESOLVED. Uninstalled in v2.1 after `rg "framer-motion" app/ components/` returned zero.
 
-### Open WEB-TASK entries (canonical decision tracker pending §6 adoption)
+### Open defects / WEB-TASK entries
 
-| Task | Description | Wave |
+| Entry | Description | Wave / Deadline |
 |---|---|---|
+| `WEB-DEFECT-20260518-001` | HeroWave canvas continuous rAF blocks main thread → PSI mobile Perf 53 / desktop 60 (target ≥95 per §3.4). Fix recipe: IntersectionObserver pause-when-offscreen + 30 fps throttle + reduce 80→50 lines and 55→35 particles. Expected outcome: mobile Perf ≥90. | Pre-launch / **2026-06-17** (§1.7 30-day cap from 2026-05-18 filing) |
 | `WEB-TASK-20260515-D` | Adopt `.claude/MEMORY.md` (per §6) — currently reserved | When first cross-session resume point needed |
 | `WEB-TASK-20260515-E` | Author `docs/design-system.md` companion | Pre-launch |
 | `WEB-TASK-20260515-F` | Author `docs/runbooks/claude-launch.md` companion | Backlog |
-| `WEB-TASK-20260515-G` | Provision Cloudflare Worker at api.jag-cybersecurity.io/contact (DNS resolution failed during Phase G probe — endpoint not yet provisioned). Contact form posts gracefully with error fallback to mailto:connect@. | Pre-launch |
+| ~~`WEB-TASK-20260515-G`~~ | ~~Provision Cloudflare Worker at api.jag-cybersecurity.io/contact~~ | **CLOSED 2026-05-15** — Worker `jag-contact-form` deployed, Resend backend (`RESEND_API_KEY` secret), custom domain bound, end-to-end smoke verified |
 
 ### Reference paths
 
 - `README.md` — full project README, the authoritative narrative source
-- `package.json` — runtime + devDependency manifest (5-dep budget per §11.1)
+- `package.json` — runtime + devDependency manifest (6-dep runtime budget per §11.1: next, react, react-dom, lucide-react, geist, sharp)
 - `tailwind.config.ts` — design tokens (colour, type, spacing, shadow, breakpoint, motion)
 - `next.config.mjs` — Next.js + dev security headers
 - `public/_headers` — production security headers (Cloudflare)
-- `lib/content.ts` — marketing copy single source of truth
+- `lib/content.ts` — marketing copy single source of truth (post-v2.2: no `pipeline` / `fiveLayers` exports; no `capabilities.proofBar` field)
 - `components/ui/` — reusable primitives
 - `components/sections/` — page-level sections
 - `lighthouserc.json` — Lighthouse CI thresholds (≥95)
 - `playwright.config.ts` — cross-browser test profiles
 - `docs/superpowers/specs/` — architectural specs and amendment logs
 - `docs/superpowers/plans/` — implementation plans
+- `docs/superpowers/handoffs/` — session handoff docs (per §1.8)
+- `workers/contact/` — Cloudflare Worker source for contact form (Resend backend)
 - `.claude/settings.json` — inverted-permission allowlist
-- `components/sections/Architecture.tsx` — new section (Phase 2)
-- `components/sections/FiveLayers.tsx` — new section (Phase 2)
-- `components/ui/ShieldSVG.tsx` — Hero + Architecture shield primitive
-- `components/ui/ProofBar.tsx` — animated proof-points band
-- `components/ui/ArchitectureDiagram.tsx` — SVG perimeter-inspector diagram
-- `components/ui/PacketParticles.tsx` — canvas packet-flow overlay (~3 kB)
-- `components/ui/LayerCard.tsx` — Five Layers card primitive
+- `components/sections/Architecture.tsx` — combined section (outside view + LayerStack inside view + moat closing; absorbed FiveLayers content in v2.2)
+- `components/sections/Dashboard.tsx` — Guardian Dashboard section (v2.2; chrome-framed product UI + 4 captions)
+- `components/ui/SectionAnchor.tsx` — centered section-opener primitive (added 2026-05-17 polish initiative; retained after BrandTile rejection)
+- `components/ui/BrowserChrome.tsx` — macOS-window framing primitive used for diagrams + dashboard image (added 2026-05-17 polish initiative; retained)
+- `components/ui/HeroWave.tsx` — canvas wave (perf issue tracked as `WEB-DEFECT-20260518-001`)
+- `components/ui/LayerStack.tsx` — 5-layer stratigraphy SVG (rendered inside Architecture section since v2.2)
+- `components/ui/ThreatTimeline.tsx` — incidents timeline (wrapped in BrowserChrome inside Threats)
+- `components/ui/ShieldSVG.tsx` — Hero shield primitive (retained)
+- `components/ui/FadeInOnScroll.tsx` — IntersectionObserver-driven CSS-keyframe reveal
+- `components/ui/CapabilityIcon.tsx` — bespoke 120×80 SVG motifs for the Solution capability cards
 - `scripts/og-build.mjs` — build-time OG image generator
 - `tests/reduced-motion.spec.ts` — prefers-reduced-motion verification
 - `tests/visual-rebuild.spec.ts` — visual regression baseline (chromium, 5 breakpoints)
 - `docs/superpowers/specs/2026-05-15-website-rebuild-phase2-design.md` — Phase 2 design spec
-- `docs/superpowers/plans/2026-05-15-website-rebuild-phase2.md` — Phase 2 implementation plan
+- `docs/superpowers/specs/2026-05-17-resend-grade-premium-polish-design.md` — premium polish spec (tile pattern subsequently rejected; typography + chrome + anchor primitives retained)
+- `docs/superpowers/plans/2026-05-17-resend-grade-premium-polish.md` — premium polish plan (16 tasks)
+- `docs/superpowers/specs/2026-05-18-dashboard-section-and-restructure-design.md` — v2.2 spec
+- `docs/superpowers/plans/2026-05-18-dashboard-section-and-restructure.md` — v2.2 plan (10 tasks)
+- `docs/superpowers/handoffs/2026-05-18-session-handoff.md` — 2026-05-17/18 session handoff
+- `public/assets/jag-logo.webp` — navigation + footer logo (WebP since v2.2 perf pass)
+- `public/assets/founder-photo.webp` — founder portrait (WebP since v2.2 perf pass)
+- `public/assets/architecture-overview.webp` — Architecture section diagram (WebP since v2.2 perf pass)
+- `public/assets/guardian-dashboard.webp` — Guardian Dashboard product UI (WebP at quality 88, sharp-enhanced)
+
+**Components deleted in v2.2** (do not search for these — they are removed): `components/sections/Pipeline.tsx`, `components/sections/FiveLayers.tsx`, `components/ui/PipelineFunnel.tsx`, `components/ui/LayerCard.tsx`, `components/ui/ProofBar.tsx`, `components/ui/MetricCounter.tsx`, `components/ui/ArchitectureDiagram.tsx`, `components/ui/PacketParticles.tsx`, `components/ui/BrandTile.tsx`, `components/ui/tiles/ShieldTile.tsx`, `components/ui/tiles/HexWarningTile.tsx`, `components/ui/tiles/ConcentricRingsTile.tsx`, `components/ui/tiles/LayerStratigraphyTile.tsx`.
 
 ### Known security advisories (2026-05-14 snapshot — for owner triage, NOT auto-fix)
 
@@ -876,6 +907,7 @@ echo "   Backups        : ${BACKUP_DIR}/  and  ${CHARTER}.backup-${TS}"
 
 | Version | Date | Summary |
 |---|---|---|
+| 2.2 | 2026-05-18 | Homepage restructure + Guardian Dashboard section. Spec `docs/superpowers/specs/2026-05-18-dashboard-section-and-restructure-design.md`; plan `docs/superpowers/plans/2026-05-18-dashboard-section-and-restructure.md`; session handoff `docs/superpowers/handoffs/2026-05-18-session-handoff.md`. Net 13 implementation commits `0a7c04d..3e7f2cc` plus this charter update. **New `components/sections/Dashboard.tsx`** showcases the JAG Guardian product UI (chrome-framed `guardian-dashboard.webp` + 4 caption blocks: PIPELINE / AI ANALYST / SYSTEM HEALTH / EVIDENCE). **Architecture absorbed FiveLayers** (outside view diagram + inside view LayerStack + "Defensible Moat" closing). **Removed:** Pipeline section (entirely), ProofBar stat band (from Solution), 5 LayerCard grid (from former FiveLayers), 4 BrandTile icons + 4 tile SVG components (the 2026-05-17 polish experiment — empirical confirmation of §11.2 `icon-tile-stack` anti-pattern). **Section count 10 → 9.** First Load JS baseline 96.9 kB → **96.5 kB**. Hero CTA secondary updated to `See JAG Guardian → #dashboard`. Hero animation stagger tightened to 0.25 s end-time (§3.2.1 alignment). All marketing PNGs → WebP via sharp (logo, founder, architecture, dashboard); ~1.2 MB total asset savings. Dashboard image enhanced with sharp filter pipeline (linear contrast + saturation + edge sharpening, quality 88). **New `WEB-DEFECT-20260518-001` filed under §1.7 escape valve** (HeroWave canvas perf, deadline 2026-06-17). **WEB-TASK-G closed** (Cloudflare Worker `jag-contact-form` provisioned with Resend backend, custom domain `api.jag-cybersecurity.io` bound, end-to-end smoke verified). Navigation: 4 → 5 links (added Guardian), fixed pre-existing `#pipeline → Technology` label bug. Footer: Solution column `Five Layers → Guardian Dashboard`, Technology column dropped Pipeline row. |
 | 2.1 | 2026-05-15 | Website rebuild Phase 2 landed (11 commits 01128ad..0b646b8). Resolves WEB-TASK-A (accent #22D3EE), -B (body Geist via `geist` package), -C (mono JetBrains Mono). Closes all 6 Phase 1.5 gaps (fade-in polish, logo, founder photo, OG image, compliance restyle, framer-motion uninstall). Adds Architecture + FiveLayers as new sections — homepage now 10 sections. Project First Load JS baseline updates from 91.7 kB → 96.9 kB. Runtime deps: 5 → 6 (geist), framer-motion uninstalled (net change same vs v2.0 baseline if framer is counted). Cloudflare Worker contact endpoint probe found DNS not provisioned → new WEB-TASK-G filed. Charter §3.2 motion-library policy honoured: zero framer-motion imports on `/`; all motion via CSS keyframes + IntersectionObserver + SVG stroke-dasharray + one ~3 kB canvas (Architecture perimeter-inspector). |
 | 2.0 | 2026-05-15 | Structural §0 routing change (action classes Type-0/1/2; tiered FULL/ABBREVIATED coordination block). §1.5 ASK-BEFORE-ACTING enumerated triggers (7) replacing 95%-confidence rule, with destructive-verb scoped to action-naming use only. §1.3 FIX-OR-FILE replaces FIX-BUGS-ON-THE-SPOT. §1.7 hotfix escape valve with ≤30-day cap. §6 reserved for MEMORY.md (avoid over-engineering an artifact that doesn't exist). §8 generic-AI self-reject rule bounded to one rewrite then escalate. §9.2 harvest pattern formalised; §9.3 retirement procedure added. §11 expanded with reference brands, success metric, JAG-original anti-pattern list; PLANNED typography/colour decisions consolidated to single "Open decisions" pointer; canonical decision tracker is §12 only. §11.2 anti-pattern catalogue de-duplicated from §11. Appendix A defect schema. Appendix B SHA install workflow. Frontmatter `sha256_body` self-attestation. Trimmed from proposed v1.3 by removing companion-doc phantom references, tautological SHA verification step, unverified sister-charter reference, and fake-mechanical "keyword overlap" tiebreaker. |
 | 1.2 | 2026-05-15 | Motion-craft (§3.2.1, Emil Kowalski harvest) + anti-pattern catalogue (§10.2, Impeccable harvest). |
